@@ -1,6 +1,6 @@
 # project timeline
 
-### 1. Kickoff
+### Agenda: 프로젝트 주제 및 데이터 선정. 
 #### Overview
 - 일시: 4/30 20:00~21:00  
 - 작성자: 오동건  
@@ -26,10 +26,9 @@
 - 분석 범위 결정.
 - 협업 방식 고민
 
-===
-
-### Agenda: 데이터 구조 및 분석범위 논의(5/4)
-
+---
+### Agenda: 데이터구조 파악 및 분석범위 결정.
+#### Overview
 #### pre-shared
 #### Contents and Decisions
 1. 데이터 구조
