@@ -12,7 +12,7 @@
 - 다이나믹 프라이싱이란?  
 : 개별 고객의 특성 및 상황에 따라 **실시간**으로 **개인맞춤화** 가격을 도출.  
 
--- [정의 출처](http://blog.naver.com/PostView.nhn?blogId=mosfnet&logNo=221320806418)
+  + [정의 출처](http://blog.naver.com/PostView.nhn?blogId=mosfnet&logNo=221320806418)
 
 2. 사용 데이터 
 - 기업 사용자 로그 데이터 및 검색 데이터
