@@ -44,6 +44,19 @@ Search1과 Search2의 search_cnt가 서로 다른 의미? 확인했는 데 수�
 Session은 클라이언트의 전체 세션에 대한 정보는 아니고 구매행위가 이루어진 세션에 대한 정보만?  
 Seseion dastaset에 포함된 Session의 기준이 무엇?
 
+보경:
+
+1. 분류: Master 데이터셋에 class2(원래 얘기한 중분류)로 분류하면 좋을 듯
+2. 최종 목표: 다이나믹 프라이싱을 위한 개인별 가중치 도출
+하위 지표:
+	1) 검색 - 많이 검색할수록(frequency)
+	2) 상품 및 상세 페이지 - 많이 방문할수록(frequency)
+세션 - 세션간 시간간격이 좁을수록(고려를 여러 번 한다), 세션의 길이가 짧을수록(구매 고민에 시간을 많이 쓰지 않는다)
+
+3. 데이터 구조 질문
+TOT_session_HR_V가 어느 단위의 시간이지
+Session sequence가 무엇이지
+
 #### Contents and Decisions
 1. 데이터 구조
 2. 분석 범위
