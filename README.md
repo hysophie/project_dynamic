@@ -35,6 +35,7 @@
 - 참석자: 이현아, 김종찬, 최보경, 류승우  
 
 #### pre-shared
+
 <details>
   <summary>Click to expand!</summary>
   
@@ -124,8 +125,10 @@ Session sequence가 무엇이지
 ###  다이나믹 프라이싱 Outline 
 #### Overview
 #### pe-shared
+
 <details>
   <summary>Click to expand!</summary>
+	
 동건  
 - 특정 시점의 데이터만 존재하기 때문에, 실시간 프라이싱은 불가능
 - 단, 데이터 집적단위가 개인이기 때문에 개인맞춤화는 가능
