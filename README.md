@@ -98,6 +98,7 @@ Session sequence가 무엇이지
 (현재 수동으로 고려하고 있는 내용들이 모델 내 weight에서 자동으로 고려된다면 몇 가지 불필요한 고민을 하고 있다고 생각 됨)*
 
 </details>
+
 #### Contents and Decisions
 1. 데이터 구조
 - 변수 설명서를 확인하고 함께 논의. 
@@ -145,6 +146,7 @@ Session sequence가 무엇이지
 -  다이나믹 프라이싱을 하는 데 한계가 될 수 있음
 
 </details>
+
 #### Contents and Decisions
 #### Forward plans
 
