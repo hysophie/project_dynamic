@@ -155,14 +155,14 @@ Session sequence가 무엇이지
 제안
 - 사용자들의 소비 행태에 대한 새로운 지표를 만든다.
 [단순한 하나의 시나리오]
-1. ex. PD_BUY_AM*PD_BUY_CT ~ TOT_PAG_VIEW_CT + TOT_SESS_HR_V + CLNT_GENDER + CLNT_AGE (+다른 변수들) MSE를 Minimize 하도록 가중치 학습
-2. Softmax -> 새로운 prediction variable 생성
-3. 확률값의 분포를 보고, 특정 확률값에 따라 소비자군 분리 -> 소비자군 별로 다른 할인폭 적용 등의 Strategy
+- 1. ex. PD_BUY_AM*PD_BUY_CT ~ TOT_PAG_VIEW_CT + TOT_SESS_HR_V + CLNT_GENDER + CLNT_AGE (+다른 변수들) MSE를 Minimize 하도록 가중치 학습
+- 2. Softmax -> 새로운 prediction variable 생성
+- 3. 확률값의 분포를 보고, 특정 확률값에 따라 소비자군 분리 -> 소비자군 별로 다른 할인폭 적용 등의 Strategy
 
-문제는, 
-1. 높은 할인폭을 적용 받은 사람들이 가격이 낮아졌다고 해서 구매를 늘릴지는 또 생각해봐야 할 문제.
+- 문제는, 
+  - 1. 높은 할인폭을 적용 받은 사람들이 가격이 낮아졌다고 해서 구매를 늘릴지는 또 생각해봐야 할 문제.
    필요 이상으로 살 것 같지는 않고, 또 그렇다고 다른 상품군으로 넘어갈까에 대해서도 의문이 듦.
-2. 개별 Customizing이 아니라 Clustering의 의미가 짙어 보이는데, 과연 넓은 의미에서 Dynamic Pricing으로 볼 수 있겠는가. 
+  - 2. 개별 Customizing이 아니라 Clustering의 의미가 짙어 보이는데, 과연 넓은 의미에서 Dynamic Pricing으로 볼 수 있겠는가. 
 
 </details>
 
