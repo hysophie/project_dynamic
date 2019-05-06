@@ -97,6 +97,7 @@ Session sequence가 무엇이지
 어쩌면 불필요한 고민을 하고 있는 것인지도 모른다는 생각. 모델링에 대한 개괄적인 내용은 꼭 한 번 짚고 넘어갔으면 좋겠음 
 (현재 수동으로 고려하고 있는 내용들이 모델 내 weight에서 자동으로 고려된다면 몇 가지 불필요한 고민을 하고 있다고 생각 됨)*
 
+</details>
 #### Contents and Decisions
 1. 데이터 구조
 - 변수 설명서를 확인하고 함께 논의. 
@@ -115,13 +116,15 @@ Session sequence가 무엇이지
 1. 데이터 구조 숙지, 질문 사항 공유
 2. 다이나믹 프라이싱을 어떻게 할지 ML모델 outline 그려오기 또는 레퍼런스 찾아서 요약하기.
 
-</details>
+
 
 ---
 
 ###  다이나믹 프라이싱 Outline 
 #### Overview
 #### pe-shared
+<details>
+  <summary>Click to expand!</summary>
 동건  
 - 특정 시점의 데이터만 존재하기 때문에, 실시간 프라이싱은 불가능
 - 단, 데이터 집적단위가 개인이기 때문에 개인맞춤화는 가능
@@ -141,6 +144,7 @@ Session sequence가 무엇이지
 3. 단 구매를 한 사람들만 있기 때문에, 데이터는 모두 지불용의가 상품의 가격보다 높은 상태. 
 -  다이나믹 프라이싱을 하는 데 한계가 될 수 있음
 
+</details>
 #### Contents and Decisions
 #### Forward plans
 
