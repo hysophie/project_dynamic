@@ -70,7 +70,7 @@ Session sequence가 무엇이지
 
 1. 중요 지표
 - Session.csv: TOT_PAG_VIEW_CT,  TOT_SESS_HR_V(애매, 온전히 쇼핑에만 쏟을 가능성?) / DVC_CTG_NM(애매, 기기 특성?)
-- Product.csv: HITS_SEQ, [PD_BUY_AM], PD_BUY_CT
+- Product.csv: HITS_SEQ, PD_BUY_AM, PD_BUY_CT
 - Custom.csv: CLNT_GENDER, CLNT_AGE
 
 2. 분류
@@ -148,6 +148,21 @@ Session sequence가 무엇이지
 2. 상품 구매 소요시간, 구매빈도, 구매량 등으로 y를 정의할 수 있을 듯? 
 3. 단 구매를 한 사람들만 있기 때문에, 데이터는 모두 지불용의가 상품의 가격보다 높은 상태. 
 -  다이나믹 프라이싱을 하는 데 한계가 될 수 있음
+
+승우
+- 다이내믹 프라이싱 -> 초/분 단위로 업데이트 되는 진정한 의미의 Real Time Data가 아니라면 결국 개별 Customizing 문제
+
+제안
+- 사용자들의 소비 행태에 대한 새로운 지표를 만든다.
+[단순한 하나의 시나리오]
+1. ex. PD_BUY_AM*PD_BUY_CT ~ TOT_PAG_VIEW_CT + TOT_SESS_HR_V + CLNT_GENDER + CLNT_AGE (+다른 변수들) MSE를 Minimize 하도록 가중치 학습
+2. Softmax -> 새로운 prediction variable 생성
+3. 확률값의 분포를 보고, 특정 확률값에 따라 소비자군 분리 -> 소비자군 별로 다른 할인폭 적용 등의 Strategy
+
+문제는, 
+1. 높은 할인폭을 적용 받은 사람들이 가격이 낮아졌다고 해서 구매를 늘릴지는 또 생각해봐야 할 문제.
+   필요 이상으로 살 것 같지는 않고, 또 그렇다고 다른 상품군으로 넘어갈까에 대해서도 의문이 듦.
+2. 개별 Customizing이 아니라 Clustering의 의미가 짙어 보이는데, 과연 넓은 의미에서 Dynamic Pricing으로 볼 수 있겠는가. 
 
 </details>
 
