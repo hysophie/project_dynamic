@@ -62,6 +62,38 @@ Seseion dastaset에 포함된 Session의 기준이 무엇?
 TOT_session_HR_V가 어느 단위의 시간이지
 Session sequence가 무엇이지
 
+승우:
+
+1. 중요 지표
+- Session.csv: TOT_PAG_VIEW_CT,  TOT_SESS_HR_V(애매, 온전히 쇼핑에만 쏟을 가능성?) / DVC_CTG_NM(애매, 기기 특성?)
+- Product.csv: HITS_SEQ, [PD_BUY_AM], PD_BUY_CT
+- Custom.csv: CLNT_GENDER, CLNT_AGE
+
+2. 분류
+- 상품범위: CLAC2_NM
+
+3. 의문점:
+   1. Pricing 방향성
+   :많이 산 사람들에게 많은 할인을 해 줄 것인가? / 고민을 많이 한 사람들(지표 ex. 클릭 수)들로 하여금 구매를 유도할 것인가?
+   (:방향성3와 관련하여 모델링의 개괄적인 방향성은 확실히 하고 가고 싶다)
+   2. Session.csv의 SESS_SEQ가 정확히 무엇인가? 
+   :예를 들어, CLNT_ID 5874829 동일한 날짜 20180903 세션ID는 늦게 발급 받았음에도 SESS_SEQ가 앞서는 경우가 생김. 
+   3. 성별에 따라 모델링을 달리할 것인가? (Male: 101063, Female: 570616)
+   4. E-Commerce 연령대 선택은 어떻게? (30대가 가장 많고, 2,3,40대에 몰려 있음.)
+   5. 괴상한 행동 양태를 갖고 있는 소비자에 대한 고려? (Pricing에 혜택을 주나?)
+   ex. CLNT_ID 4736937 비슷비슷하고 가격은 똑같은 제품군에 대해 3154번 구매? 4월부터 9월까지? ???
+
+4. 방향성:
+   1. CLNT_ID, SESS_ID 를 Key값으로 Product, Session Data Merging
+   2. Product.csv, Session.csv를 통해 Key값들을 바탕으로 실제 검색 활동이 구매로 이어지고 있는 가에 대한 고찰 
+      (-> 이것에 대한 객관적인 지표도 결정)
+   3. 모델링 시작 이전에, Input, Layer, Output에 대한 개괄적인 방향성은 잡아놓고 시작했으면 좋겠음
+   4. 추후에 동일 상품군에 대한 타사 제품 가격을 이용할 것인지 상의
+
+* 지금 하고 있는 고민들이 NN의 Dynamic Pricing에 대한 이용 양상을 몰라서 
+어쩌면 불필요한 고민을 하고 있는 것인지도 모른다는 생각. 모델링에 대한 개괄적인 내용은 꼭 한 번 짚고 넘어갔으면 좋겠음 
+(현재 수동으로 고려하고 있는 내용들이 모델 내 weight에서 자동으로 고려된다면 몇 가지 불필요한 고민을 하고 있다고 생각 됨)*
+
 #### Contents and Decisions
 1. 데이터 구조
 - 변수 설명서를 확인하고 함께 논의. 
