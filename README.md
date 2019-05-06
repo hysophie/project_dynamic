@@ -35,6 +35,9 @@
 - 참석자: 이현아, 김종찬, 최보경, 류승우  
 
 #### pre-shared
+<details>
+  <summary>Click to expand!</summary>
+  
 동건: 
 1. Dynamic pricing 대상.  
 조건(성별,나이,상품군,세션,검색)에 따라 상품을 구매할 가중치를 예측한 뒤, 다이나믹 프라이싱 전략 기획     
@@ -111,6 +114,8 @@ Session sequence가 무엇이지
 
 1. 데이터 구조 숙지, 질문 사항 공유
 2. 다이나믹 프라이싱을 어떻게 할지 ML모델 outline 그려오기 또는 레퍼런스 찾아서 요약하기.
+
+</details>
 
 ---
 
