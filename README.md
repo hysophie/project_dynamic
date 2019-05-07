@@ -228,3 +228,4 @@ pruduct는 구매를 한 세션만 존재하는 반면, session에는 pruduct �
 2. a/b 테스트 고민해보기.
 
 
+
