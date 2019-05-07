@@ -195,6 +195,13 @@ Session sequence가 무엇이지
 -	가격을 얼마나 올리고 내려야 할까?  다른 쇼핑몰의 가격도 쉽게 알 수 있으므로, 가격을 올리면 다른 쇼핑몰로 가버리는 게 아닐까? (e-commerce에서 dynamic pricing이 효과 있으려면 어떻게 해야 할까?)
 
 
+보경
+1) 다이나믹 프라이싱을 강화학습 관점에서 접근
+Dynamic pricing on e-commerce platform with deep reinforcement learning
+ 논문 리뷰: https://hoondongkim.blogspot.com/2018/10/reinforcement-learning-e-commerce.html?fbclid=IwAR21M3ktj5GLWMuC3Ta1qCtau77VrCYa_xde8f4gWGgIrbsL3mMQNRib1yc
+ 
+2) 상품군을 타입별로 분류 Fast moving customer goods(FMCGs) / Luxury 
+
 제안 
 </details>
 
