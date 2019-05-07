@@ -162,7 +162,7 @@ Session sequence가 무엇이지
 - 문제는, 
   - 1. 높은 할인폭을 적용 받은 사람들이 가격이 낮아졌다고 해서 구매를 늘릴지는 또 생각해봐야 할 문제.
    필요 이상으로 살 것 같지는 않고, 또 그렇다고 다른 상품군으로 넘어갈까에 대해서도 의문이 듦.
-  - 2. 개별 Customizing이 아니라 Clustering의 의미가 짙어 보이는데, 이것을 Dynamic Pricing으로 볼 수 있겠는가. 
+  - 2. 개별 Customizing이 아니라 Clustering의 의미가 짙어 보이는데(Segmentation), 이것을 Dynamic Pricing으로 볼 수 있겠는가. 
 
 </details>
 
