@@ -267,7 +267,11 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - CNN의 5가지 layer (input,cov'n,activate,pooling,fully-connected)
 - Convolution lasyer의 3가지 필수 hyperparameter (filter depth, stride, zero-padding)
 - CNN praticatl tips 
--- input layer 
+  - C-R-C-R-P이 한 set로 해서 여러 set를 이어서 네크워트를 구성
+  - input layer: 픽셀 크기가 2^n를 갖는 정사각형으로 가공해야 pooling이 수월
+  - convolution layer: 3\*3, 5\*5 와 같은 작은 홀수를 필터 크기로 사용. pad = 1, stride = 1
+  - pooling layer = 2\*2, stride = 2, maxpooling
+
 
 </details>
 
