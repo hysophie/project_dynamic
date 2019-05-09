@@ -246,14 +246,28 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 
 <details>
   <summary>Click to expand!</summary>
-	
+
+동건:  
+1. 재구매여부 y 제안
+- 데이터를 재확인한 결과, 모든 세션은 구매를 한 경우만 존재.구매를 안 한 세션에 대한 데모데이터를 만드는 방향에 대한 재확인 필요.
+- 다만, 데모데이터를 만들지 않고 **'재구매여부'** 를 y로 사용할 수 도 있을 듯. 특정 세션이 후 며칠 이내에 재구매를 했으면 1값을 주고 하지 않았으면 0값을 주는 방향으로, 이런 접근은 지금의 데이터로 충분히 만들 수 있고, 변수 설명도 의미를 가짐. (EDA를 함께할 수 있다.)
+
+2. feature modeling
+
 </details>
 
 #### study contents
 
 <details>
   <summary>Click to expand!</summary>
-	
+
+동건:
+- 서울대학교 etl 공개강좌에서 CNNs 수강.
+- convolution(합성곱)의 직관적 의미
+- CNN의 5가지 layer (input,cov'n,activate,pooling,fully-connected)
+- CNN의 3가지 필수 hyperparameter (filter depth, stride, zero-padding)
+- CNN의 관행 (zero-padding, stride=1, maxpooing, ReLU)
+
 </details>
 
 #### Contents and Decisions
