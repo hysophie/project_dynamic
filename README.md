@@ -265,8 +265,9 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - 서울대학교 etl 공개강좌에서 CNNs 수강.
 - convolution(합성곱)의 직관적 의미
 - CNN의 5가지 layer (input,cov'n,activate,pooling,fully-connected)
-- CNN의 3가지 필수 hyperparameter (filter depth, stride, zero-padding)
-- CNN의 관행 (zero-padding, stride=1, maxpooing, ReLU)
+- Convolution lasyer의 3가지 필수 hyperparameter (filter depth, stride, zero-padding)
+- CNN praticatl tips 
+-- input layer 
 
 </details>
 
