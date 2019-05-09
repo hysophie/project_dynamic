@@ -250,6 +250,12 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 </details>
 
 #### study contents
+
+<details>
+  <summary>Click to expand!</summary>
+	
+</details>
+
 #### Contents and Decisions
 #### Forward plans
 
