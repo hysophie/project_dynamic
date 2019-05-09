@@ -238,6 +238,8 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 1. 피쳐 모델링.
 2. a/b 테스트 고민해보기.
 
+---
+
 ###  Feature modeling & ML study 
 #### Overview
 #### pe-shared
