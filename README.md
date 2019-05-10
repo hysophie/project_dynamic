@@ -280,8 +280,9 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
   - 'Network'라는 단어가 말해주는 것처럼, 신경망 알고리즘을 기반을 하고 있음. 
   - Backpropagation을 통해 가중치를 조절해나가며, Generator가 현실과 가장 유사한 데이터를 내어놓으려고 노력함.
   - '비지도학습'의 NN으로의 적용으로, 상당히 Hot한 분야.
-  - Generator의 성능을 바탕으로 GAN model의 성능 평가
+  - Generator의 성능을 기준으로 GAN model의 성능 평가
  > 구매자 데이터가 부족하다면 GAN 모델을 통해 실제 구매 데이터와 유사한 행동 양상을 보이는 Fake Data를 만들어낼 수 있을 것. 
+ > 구매하지 않은 사람의 데이터를 GAN을 통해 만들어낸다는 것은 현재의 데이터로 볼 때 어불성설인 것처럼 보임.
  > Neural Network 기반이기에 현재 우리가 향하고 있는 방향성과 잘 맞아 보이나, 다만, 모델의 이해나 적용이 결코 쉽지는 않아 보임. 
   
 
