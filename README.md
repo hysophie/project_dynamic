@@ -5,7 +5,7 @@
 #### Overview
 - 일시: 4/30 20:00~21:00  
 - 작성자: 오동건  
-- 참석자: 이현아, 김종찬, 최보경, 류승우  
+- 참석자: 이현아, 김종찬, 최보경, 류승우, 오동건
 
 #### Contents and Decisions
 1. 주제: 온라인 행동 데이터를 활용한 다이나믹 프라이싱.  
@@ -32,7 +32,7 @@
 #### Overview
 - 일시: 5/4 17:00~17:40  
 - 작성자: 오동건  
-- 참석자: 이현아, 김종찬, 최보경, 류승우  
+- 참석자: 이현아, 김종찬, 최보경, 류승우, 오동건  
 
 #### pre-shared
 
@@ -125,6 +125,9 @@ Session sequence가 무엇이지
 
 ###  다이나믹 프라이싱 Outline 
 #### Overview
+- 일시: 5/7 19:30~21:00  
+- 작성자: 오동건, 이현아
+- 참석자: 이현아, 김종찬, 최보경, 류승우, 오동건  
 #### pe-shared
 
 <details>
@@ -208,24 +211,85 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 #### Contents and Decisions
 
 1. 분석 방법
-pruduct는 구매를 한 세션만 존재하는 반면, session에는 pruduct 세션도 존재한다. 이를 구매를 안한 경우로 가정하고 모델을 만듬
-단, 우선적으로는 비율을 확인해야하고 사용. 비율이 너무 적으면 데모데이터를 만들거나 붓스트랩 샘플을 만드는 방향으로! 
-데모데이터는 현재데이터 셋에서 근거를 찾아 최대한 합리적으로! 
+- pruduct는 구매를 한 세션만 존재하는 반면, session에는 pruduct 세션도 존재한다. 이를 구매를 안한 경우로 가정하고 모델을 만듦
+- 단, 우선적으로는 비율을 확인해야하고 사용. 비율이 너무 적으면 데모데이터를 만들거나 붓스트랩 샘플을 만드는 방향으로! 
+- 데모데이터는 현재데이터 셋에서 근거를 찾아 최대한 합리적으로! 
 
 2. 이상데이터 제거
-세션의 날짜와 시퀸스가 일치하지 않거나 비상적인 소비패턴을 보이는 데이터는 제거. 
-이상치 기준 논의 필요.
+- 세션의 날짜와 시퀸스가 일치하지 않거나 비상적인 소비패턴을 보이는 데이터는 제거. 
+- 이상치 기준 논의 필요.
 
 3. a/b 테스트의 가능성? 
-모델을 만든 다음에, 가설을 세워서  a/b 테스트를 진행하고 실제 마케팅 효과를 검증 -> 모델 진행 후 추후 논의. 
+- 모델을 만든 다음에, 가설을 세워서  a/b 테스트를 진행하고 실제 마케팅 효과를 검증 -> 모델 진행 후 추후 논의. 
 
-4. 모두의 딥러닝의 단체수강.
-회의전에 간단하게 내용 공유하.
+4. 상품을 특성별로 나누기
+- (ex) 사치재 vs. 보통재
+- 같은 상품의 price level 별 revenue를 그래프로 그린 논문 참고할 수도.
+
+5. 그 외
+- feature 브레인스토밍 (ex) 검색한 후 샀는지 아닌지를 0, 1로 표현 / 전체 검색량 대비 개인의 검색량
+- 다른 쇼핑몰의 가격을 크롤링 하는 방안도 추후에 고려.
+
+6. 모두의 딥러닝의 단체수강.
+- 회의전에 간단하게 내용 공유하기.
 
 #### Forward plans
 
 1. 피쳐 모델링.
 2. a/b 테스트 고민해보기.
 
+---
 
+###  Feature modeling & ML study 
+#### Overview
+#### pe-shared
+
+<details>
+  <summary>Click to expand!</summary>
+
+동건:  
+1. 재구매여부 y 제안
+- 데이터를 재확인한 결과, 모든 세션은 구매를 한 경우만 존재.구매를 안 한 세션에 대한 데모데이터를 만드는 방향에 대한 환기 필요.
+- 다만, 데모데이터를 만들지 않고 **'재구매여부'** 를 y로 사용할 수 도 있을 듯. 특정 세션이 후 며칠 이내에 재구매를 했으면 1값을 주고 하지 않았으면 0값을 주는 방향으로, 이런 접근은 지금의 데이터로 충분히 만들 수 있고, 변수 설명도 의미를 가짐. (의미 있는 EDA의 가능성.)
+
+2. feature modeling
+
+</details>
+
+#### study contents
+
+<details>
+  <summary>Click to expand!</summary>
+
+동건:
+- 서울대학교 etl 공개강좌에서 CNNs 수강.
+- convolution(합성곱)의 직관적 의미
+- CNN의 5가지 layer (input,cov'n,activate,pooling,fully-connected)
+- Convolution lasyer의 3가지 필수 hyperparameter (filter depth, stride, zero-padding)
+- CNN praticatl tips 
+  - C-R-C-R-P이 한 set로 해서 여러 set를 이어서 네크워트를 구성
+  - input layer: 픽셀 크기가 2^n를 갖는 정사각형으로 가공해야 pooling이 수월
+  - convolution layer: 3\*3, 5\*5 와 같은 작은 홀수를 필터 크기로 사용. pad = 1, stride = 1
+  - pooling layer = 2\*2, stride = 2, maxpooling
+
+승우:
+- GAN model 공부 
+- GAN: Generative Adversarial Network.
+  - Generator와 Discriminator가 서로 속고 속이는 경쟁을 함.
+  - Generator는 가능한한 Real Data와 유사한 Fake Data를 만드려, Discriminator는 가능한한 Fake Data와 Real Data를 잘 구분해내려.
+  - 'Network'라는 단어가 말해주는 것처럼, 신경망 알고리즘을 기반을 하고 있음. 
+  - Backpropagation을 통해 가중치를 조절해나가며, Generator가 현실과 가장 유사한 데이터를 내어놓으려고 노력함.
+  - '비지도학습'의 NN으로의 적용으로, 상당히 Hot한 분야.
+  - Generator의 성능을 기준으로 GAN model의 성능 평가
+ > 구매자 데이터가 부족하다면 GAN 모델을 통해 실제 구매 데이터와 유사한 행동 양상을 보이는 Fake Data를 만들어낼 수 있을 것. 
+ > 구매하지 않은 사람의 데이터를 GAN을 통해 얻어낸다는 것은 잘못된 것. -> 구매하지 않은 사람에 대한 고려는 다른 방식으로 이루어져야.
+ > Neural Network 기반이기에 현재 우리가 향하고 있는 방향성과 잘 맞아 보이나, 다만, 모델의 이해나 적용이 결코 쉽지는 않아 보임. 
+  
+- 모두를 위한 딥러닝 Lab 1, 8
+   - 텐서 overview
+   - Dimension, Shape, Rank, Axis, Matmul, tf.reduce_mean, tf.reduce_sum, argmax, reshape(squeeze, expand), one hot, casting, stack
+</details>
+
+#### Contents and Decisions
+#### Forward plans
 
