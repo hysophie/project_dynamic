@@ -272,6 +272,18 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
   - convolution layer: 3\*3, 5\*5 와 같은 작은 홀수를 필터 크기로 사용. pad = 1, stride = 1
   - pooling layer = 2\*2, stride = 2, maxpooling
 
+승우:
+- GAN model 공부 
+- GAN: Generative Adversarial Network.
+  - Generator와 Discriminator가 서로 속고 속이는 경쟁을 함.
+  - Generator는 가능한한 Real Data와 유사한 Fake Data를 만드려, Discriminator는 가능한한 Fake Data와 Real Data를 잘 구분해내려.
+  - 'Network'라는 단어가 말해주는 것처럼, 신경망 알고리즘을 기반을 하고 있음. 
+  - Backpropagation을 통해 가중치를 조절해나가며, Generator가 현실과 가장 유사한 데이터를 내어놓으려고 노력함.
+  - '비지도학습'의 NN으로의 적용으로, 상당히 Hot한 분야.
+  - Generator의 성능을 바탕으로 GAN model의 성능 평가
+ > 구매자 데이터가 부족하다면 GAN 모델을 통해 실제 구매 데이터와 유사한 행동 양상을 보이는 Fake Data를 만들어낼 수 있을 것. 
+ > Neural Network 기반이기에 현재 우리가 향하고 있는 방향성과 잘 맞아 보이나, 다만, 모델의 이해나 적용이 결코 쉽지는 않아 보임. 
+  
 
 </details>
 
