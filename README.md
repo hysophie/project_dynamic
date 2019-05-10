@@ -282,7 +282,7 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
   - '비지도학습'의 NN으로의 적용으로, 상당히 Hot한 분야.
   - Generator의 성능을 기준으로 GAN model의 성능 평가
  > 구매자 데이터가 부족하다면 GAN 모델을 통해 실제 구매 데이터와 유사한 행동 양상을 보이는 Fake Data를 만들어낼 수 있을 것. 
- > 구매하지 않은 사람의 데이터를 GAN을 통해 만들어낸다는 것은 현재의 데이터로 볼 때 어불성설인 것처럼 보임.
+ > 구매하지 않은 사람의 데이터를 GAN을 통해 얻어낸다는 것은 잘못된 것. -> 구매하지 않은 사람에 대한 고려는 다른 방식으로 이루어져야.
  > Neural Network 기반이기에 현재 우리가 향하고 있는 방향성과 잘 맞아 보이나, 다만, 모델의 이해나 적용이 결코 쉽지는 않아 보임. 
   
 
