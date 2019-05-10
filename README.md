@@ -285,7 +285,9 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
  > 구매하지 않은 사람의 데이터를 GAN을 통해 얻어낸다는 것은 잘못된 것. -> 구매하지 않은 사람에 대한 고려는 다른 방식으로 이루어져야.
  > Neural Network 기반이기에 현재 우리가 향하고 있는 방향성과 잘 맞아 보이나, 다만, 모델의 이해나 적용이 결코 쉽지는 않아 보임. 
   
-
+- 모두를 위한 딥러닝 Lab 1, 8
+   - 텐서 overview
+   - Dimension, Shape, Rank, Axis, Matmul, tf.reduce_mean, tf.reduce_sum, argmax, reshape(squeeze, expand), one hot, casting, stack
 </details>
 
 #### Contents and Decisions
