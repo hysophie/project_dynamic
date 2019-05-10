@@ -261,7 +261,8 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
   - 구매가격, 구매량 변수가 ,가 포함된 str 자료형이여서 ,를 제거하고 int로 변환.
   - 브랜드 이름에 [],()이 들어가 동일한 브랜드임에도 다르게 인식 -> [],()을 제거.
 - Search1,Search2
-  - 두 데이터셋은 구매를 하지 않은 경우에도 자료 포함. 데모데이터를 만든다면 비율을 어떻게 설정할지에 대한 근거로 활용 가능(특히 Session1)
+  - 두 데이터셋은 구매를 하지 않은 경우에도 자료 포함. 
+    - 데모데이터를 만든다면 비율을 어떻게 설정할지에 대한 근거로 활용 가능(특히 Session1)
   - 두 데이터셋을 어떻게 활용할지는 분석방식을 어떻게 할지에 따라 달라질 것으로 예상. 
 
 - Pruduct, Session, Master를 병합해서 5백만\*24 dataframe을 생성
