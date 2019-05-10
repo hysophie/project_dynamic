@@ -253,6 +253,19 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - 다만, 데모데이터를 만들지 않고 **'재구매여부'** 를 y로 사용할 수 도 있을 듯. 특정 세션이 후 며칠 이내에 재구매를 했으면 1값을 주고 하지 않았으면 0값을 주는 방향으로, 이런 접근은 지금의 데이터로 충분히 만들 수 있고, 변수 설명도 의미를 가짐. (의미 있는 EDA의 가능성.)
 
 2. feature modeling
+- Session, Pruduct 데이터를 중심으로 전처리와 변수 추가. (code uploaded) 
+- Session
+  - SESS_DT 변수를 활용해, 구매가 이루어진 시점의 월, 주, 요일 변수 추가.
+  - 추후 휴일여부, 주말여부, 계절도 포함을 시킬 지 논의.
+- Pruduct
+  - 구매가격, 구매량 변수가 ,가 포함된 str 자료형이여서 ,를 제거하고 int로 변환.
+  - 브랜드 이름에 [],()이 들어가 동일한 브랜드임에도 다르게 인식 -> [],()을 제거.
+- Search1,Search2
+  - 두 데이터셋은 구매를 하지 않은 경우에도 자료 포함. 데모데이터를 만든다면 비율을 어떻게 설정할지에 대한 근거로 활용 가능(특히 Session1)
+  - 두 데이터셋을 어떻게 활용할지는 분석방식을 어떻게 할지에 따라 달라질 것으로 예상. 
+
+- Pruduct, Session, Master를 병합해서 5백만\*24 dataframe을 생성
+  - 분석 방향을 구체적으로 결정한 이후, Search1을 Search2 데이터를 어떻게 넣을 지 고민 필요. 
 
 </details>
 
