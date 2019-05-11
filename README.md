@@ -289,22 +289,15 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - offline retail stores에 대한 product category 분류 모델은 논문들에서 많으나, e-commerce product category 분류 모델은 찾아보지 못했음.
 
 현아:
+
 	Feature 후보
 -	우리의 딥러닝 모델: 온라인 행동 데이터들을 input feature로 주고, 이 사람이 구매 여부의 label을 0,1로 줘서 학습시킴 -> output: 각 사용자의 해당 세션의 구매확률 예측
-1)	Search1
--	SEARCH_CNT
-2)	Search2
--	SEARCH_CNT: 특정 세션에 특정 사용자가 검색한 그 제품의 그날 전체 검색량
-3)	Session
+1)	Session
 -	구매한 세션의 간격 (CLNT_ID별로, 직전 SESS_SEQ와의 gap)
--	세션에 머문 시간 (TOT_SESS_HR_V)
--	세션에서 본 페이지의 수 (TOT_PAGE_VIEW_CT)
--	(***) 세션 접속한 device (DVC_CTG)
-4)	Customer
--	성별, 나이
-5)	Pruduct
--	(***) 특정 고객의 구매 상품의 다양성(상품 가짓수, 카테고리 개수) -> 그 사람이 모든 종류의 제품을 이 쇼핑몰에서 사고 있는지, 특정 제품or제품군만을 그 쇼핑몰에서 사고 있는지
-6)	Master
+-	세션 접속한 device (DVC_CTG)
+2)	Pruduct
+-	특정 고객의 구매 상품의 다양성(상품 가짓수, 카테고리 개수) -> 그 사람이 모든 종류의 제품을 이 쇼핑몰에서 사고 있는지, 특정 제품or제품군만을 그 쇼핑몰에서 사고 있는지
+3)	Master
 -	구매한 제품의 중분류
 
 	Idea 제안
