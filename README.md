@@ -279,12 +279,15 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
   - 이러한 호구 및 비호구들의 Session 패턴학습
   
 보경:
-- pruduct 데이터 중심 이해와 전처리(pruduct_type. csv & product 분류별 평균 가격 & COUNT)
-- (직관적이나) 중분류의 평균 가격이 낮을 수록 / 구매 횟수가 많음을 확인하였음
+- pruduct 데이터 중심 이해와 전처리(pruduct_type. csv & product 분류별 평균 가격 & COUNT.ipynb 추후 업로드)
 - 대분류 37가지, 중분류 128가지
 - 평균 가격 높은 중분류: DIY 가구 > 냉장고 > 세탁기 > 컴퓨터 > TV
 - 평균 가격 낮은 중분류: 속옷/양말 < 필기도구 < 닭고기류
-- 
+- (직관적이나) 중분류의 평균 가격이 낮을 수록 / 구매 횟수가 많음을 확인하였음. 
+하지만! '닭고기'의 경우 평균 가격이 6위로 낮지만 구매 횟수가 하위 18위 -> 롯데 계열사 온라인 채널로 굳이 축산물 및 소비재를 사려하지 않는가?
+주로 의류, 패션, 가구 등의 상품목으로 구성되어 있음
+- offline retail stores에 대한 product category 분류 모델은 논문들에서 많으나, e-commerce product category 분류 모델은 찾아보지 못했음.
+
 
 </details>
 
