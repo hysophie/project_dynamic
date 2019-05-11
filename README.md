@@ -328,6 +328,11 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 		Q hat(s,a) <- r(받은 reward) + maxQ(s',a')
 		S에서 s'로 넘어간다.
 
+현아:
+- 모두를 위한 딥러닝 Lab10, ConvNet의 conV 레이어 만들기
+- Lab 10 : NN for MNIST (relu 활용) -> Xavier initialization (weight 초기화) -> Dropout layer 넣기 (network이 깊어지면 overfitting의 문제가 생기는데, 이를 해결하기 위해 network 일부를 끊음) * Dropout 시에 주의할 점: train 할 때는 keep_prob(network의 몇%를 keep할 것인가)를 0.5~0.7 정도로, test 할때는 무조건 "1"
+- 다양한 종류의 optimizer : 일반적으로 ADAM optimizer를 많이 씀 (성능이 가장 좋아서) => tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+
 </details>
 
 
