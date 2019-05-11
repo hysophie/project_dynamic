@@ -288,6 +288,39 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 주로 의류, 패션, 가구 등의 상품목으로 구성되어 있음
 - offline retail stores에 대한 product category 분류 모델은 논문들에서 많으나, e-commerce product category 분류 모델은 찾아보지 못했음.
 
+현아:
+	Feature 후보
+-	우리의 딥러닝 모델: 온라인 행동 데이터들을 input feature로 주고, 이 사람이 구매 여부의 label을 0,1로 줘서 학습시킴 -> output: 각 사용자의 해당 세션의 구매확률 예측
+1)	Search1
+-	SEARCH_CNT
+2)	Search2
+-	SEARCH_CNT: 특정 세션에 특정 사용자가 검색한 그 제품의 그날 전체 검색량
+3)	Session
+-	구매한 세션의 간격 (CLNT_ID별로, 직전 SESS_SEQ와의 gap)
+-	세션에 머문 시간 (TOT_SESS_HR_V)
+-	세션에서 본 페이지의 수 (TOT_PAGE_VIEW_CT)
+-	(***) 세션 접속한 device (DVC_CTG)
+4)	Customer
+-	성별, 나이
+5)	Pruduct
+-	(***) 특정 고객의 구매 상품의 다양성(상품 가짓수, 카테고리 개수) -> 그 사람이 모든 종류의 제품을 이 쇼핑몰에서 사고 있는지, 특정 제품or제품군만을 그 쇼핑몰에서 사고 있는지
+6)	Master
+-	구매한 제품의 중분류
+
+	Idea 제안
+1)	y label 제안 -> 구매한 고객 중에서도 충성고객(1) / 그냥고객(0)으로 label 붙이기
+-	충성고객: 구매금액x구매횟수가 일정 수준 이상인 고객
+-	그냥고객: 구매금액x구매횟수가 일정 수준 이하인 고객
+-	충성고객vs.그냥고객의 온라인 활동 패턴 학습 후, 특 정 고객이 충성고객이 될 가능성 예측
+2)	비지도학습도 시도해보는 건 어떨까?
+-	구매한 고객들 중에서도, Clustering을 통해 여러 cluster로 고객군 분류 -> cluster 별 구매금액/온라인 행동의 차이가 있는지
+
+	A/B test 고민해보기
+-	https://www.business-science.io/business/2019/03/11/ab-testing-machine-learning.html
+
+	그 외 읽은 참고자료
+-	https://towardsdatascience.com/an-overview-of-categorical-input-handling-for-neural-networks-c172ba552dee -> Handling categorical input for NN (one-hot encoding을 기본적으로 사용하지만, 다른 방법도 많음!
+-	https://www.upwork.com/hiring/for-clients/log-analytics-deep-learning-machine-learning/
 
 </details>
 
