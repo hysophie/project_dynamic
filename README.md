@@ -312,7 +312,7 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
  - Q-function
  	> 개념
  	'내가 해봐서 아는데, 어떤 State에서 각 Action을 취하면? 이런 Reward(Quality, 즉 Q)를 주더라' 라고 알려주는 형님
-	> Q-function의 가정
+	>> Q-function의 가정
 	- S'에서는 Q를 안다고 가정한다.
 	- I am in s. When I do action a, I'll go to s'. When I do action a, I'll get reward r.
 	- Q in s', Q(S',a')이것은 이미 알고 있다고 가정 들어감(그 다음 state에서의 리워드를 안다고 가정하고 현 state에서의 리워즈 추정)
