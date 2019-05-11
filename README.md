@@ -305,7 +305,32 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - 모두를 위한 딥러닝 Lab 1-4, 8
    - 텐서 overview
    - Dimension, Shape, Rank, Axis, Matmul, tf.reduce_mean, tf.reduce_sum, argmax, reshape(squeeze, expand), one hot, casting, stack
+
+보경:
+ - 모두를 한 딥러닝 RL 시즌 Lecture 1-3
+ - RL 기본: Agent가 전체 Environment의 각 State에서 Action을 하고 Rewards를 얻는다.
+ - Q-function
+ 	> 개념
+ 	'내가 해봐서 아는데, 어떤 State에서 각 Action을 취하면? 이런 Reward(Quality, 즉 Q)를 주더라' 라고 알려주는 형님
+	> Q-function의 가정
+	- S'에서는 Q를 안다고 가정한다.
+	- I am in s. When I do action a, I'll go to s'. When I do action a, I'll get reward r.
+	- Q in s', Q(S',a')이것은 이미 알고 있다고 가정 들어감(그 다음 state에서의 리워드를 안다고 가정하고 현 state에서의 리워즈 추정)
+	> 공식화
+	- Q(s,a) = r+maxQ(s',a') <- r은 rewards	
+- Dummy Q-learning algorithm
+	>절차 
+	각 s(state), a(action), 에서 Q hat(s,a)를 0으로 input
+	현 s를 살핀다. 
+	다음을 무한 반복한다.
+		Action a를 고르고 실행한다
+		당장의 reward r을 받는다
+		다음 state s'을 살핀다
+		Q hat(s,a) <- r(받은 reward) + maxQ(s',a')
+		S에서 s'로 넘어간다.
+
 </details>
+
 
 #### Contents and Decisions
 #### Forward plans
