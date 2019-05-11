@@ -270,6 +270,13 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 		
 - 우선은 Pruduct, Session, Master를 병합해서 5백만\*24 dataframe을 생성
   - 분석 방향을 구체적으로 결정한 이후, Search1을 Search2 데이터를 어떻게 넣을 지 고민 필요. 
+  
+  종찬 : 
+  1. 구매량/검색량 혹은 머무는 시간 y 제안
+  - 전략 : 가격을 잘 비교하지 않는 꼼꼼하지 않은 유저(호구)를 구별하여 가격을 높인다.
+  - 검색을 많이 하면서도/머무는 시간이 많으면서도 구매량이 낮은 경우 비호구일 가능성이 높다는 가정  
+  - 따라서 y가 낮을 수록 비호구일 가능성이 높다고 가정
+  - 이러한 호구 및 비호구들의 Session 패턴학습
 
 </details>
 
