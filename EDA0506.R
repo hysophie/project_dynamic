@@ -24,7 +24,7 @@ custom %>%
   summarise(obs = n())
 
 detach(custom)
-#ÀÏ´ÜÀº 10´ë °í¹Î, 70, 80´ë´Â ¹«½ÃÇØµµ µÈ´Ù°í »ı°¢. (%)
+#ì¼ë‹¨ì€ 10ëŒ€ ê³ ë¯¼, 70, 80ëŒ€ëŠ” ë¬´ì‹œí•´ë„ ëœë‹¤ê³  ìƒê°. (%)
 ##########################################################################
 ###Master Data###
 master<- read_csv('C:\\DynamicData\\Master.csv')
@@ -35,29 +35,29 @@ master_class2 <- master %>%
   group_by(CLAC2_NM) %>%
   select(-CLAC3_NM)
 
-#master_class2_stats : ÁßºĞ·ù·Î ´Ù Á¤¸®, °³¼ö ¼øÀ¸·Î. 
+#master_class2_stats : ì¤‘ë¶„ë¥˜ë¡œ ë‹¤ ì •ë¦¬, ê°œìˆ˜ ìˆœìœ¼ë¡œ. 
 master_class2_stats <- master_class2 %>%
   summarise(obs=n()) %>%
   arrange(desc(obs))
 
 as.data.frame(master_class2_stats)
-#°³¼ö¸¦ ¾î¶»°Ô ²÷À» °ÍÀÎ°¡? 
+#ê°œìˆ˜ë¥¼ ì–´ë–»ê²Œ ëŠì„ ê²ƒì¸ê°€? 
 
 ########################################################################
 ###Product Data###
-product <- read_csv('C:\\Users\\seungwoo\\DynamicData\\Product.csv')
+product <- read_csv('C:\DynamicData\\Product.csv')
 
 nrow(product) #5024906
 nrow(unique(product[,1])) #922737
-#°°Àº »ç¶÷ÀÌÁö¸¸ ´Ù¸¥ ±â±â¸¦ ¾²´Â »ç¶÷À» ¾Ë¾Æ³¾ ¼ö´Â ¾ø´Ù°í »ı°¢.
+#ê°™ì€ ì‚¬ëŒì´ì§€ë§Œ ë‹¤ë¥¸ ê¸°ê¸°ë¥¼ ì“°ëŠ” ì‚¬ëŒì„ ì•Œì•„ë‚¼ ìˆ˜ëŠ” ì—†ë‹¤ê³  ìƒê°.
 
 product_summarise <- product %>%
   group_by(CLNT_ID) %>%
   summarise(num = n()) %>%
   arrange(desc(num))
-#3154, 2194, 1827 ¹ø Á¤µµ ¾¿ µîÀåÇÏ´Â ÀÌ»óÇÑ Çàµ¿ ¾çÅÂ¸¦ °®°í ÀÖ´Â »ç¶÷µé?
-#ÀÌ·± ¼ÒºñÀÚµé¿¡ ´ëÇÑ ³íÀÇ°¡ ÇÊ¿äÇÏ´Ù°í »ı°¢.
-#ÀÌ »ç¶÷ÀÇ Çàµ¿ ¾çÅÂ¸¦ ¾î¶»°Ô »ı°¢ÇØº¼ ¼ö ÀÖÀ»±î?
+#3154, 2194, 1827 ë²ˆ ì •ë„ ì”© ë“±ì¥í•˜ëŠ” ì´ìƒí•œ í–‰ë™ ì–‘íƒœë¥¼ ê°–ê³  ìˆëŠ” ì‚¬ëŒë“¤?
+#ì´ëŸ° ì†Œë¹„ìë“¤ì— ëŒ€í•œ ë…¼ì˜ê°€ í•„ìš”í•˜ë‹¤ê³  ìƒê°.
+#ì´ ì‚¬ëŒì˜ í–‰ë™ ì–‘íƒœë¥¼ ì–´ë–»ê²Œ ìƒê°í•´ë³¼ ìˆ˜ ìˆì„ê¹Œ?
 
 product_summarise
 tail(product_summarise)
@@ -67,16 +67,16 @@ product_rank1 <- product[product$CLNT_ID == 4736937,]
 product_rank1
 
 ggplot(data=product_rank1, mapping=aes(x=HITS_SEQ, y=PD_BUY_CT))+
-  geom_jitter() #¾î¶² °æÇâ¼ºµµ Ã£Áö ¸øÇÏ°Ú´Âµ¥?
+  geom_jitter() #ì–´ë–¤ ê²½í–¥ì„±ë„ ì°¾ì§€ ëª»í•˜ê² ëŠ”ë°?
 
-#write.csv(product_rank1, 'C:\\Users\\½Â¿ì\\Desktop\\product_rank1.csv')
+#product_rank1 <- An example of strange consumer 
 
 product_summarise2 <- product %>%
   group_by(CLNT_ID) %>%
   summarise(SESSID = n_distinct(SESS_ID))
 product_summarise2 %>%
   arrange(desc(SESSID))
-#¿ª½Ã 100¹øÀÌ ³Ñ´Â SESSID ¹ß±ŞÀÚ ¸¹À½.
+#ì—­ì‹œ 100ë²ˆì´ ë„˜ëŠ” SESSID ë°œê¸‰ì ë§ìŒ.
 
 
 
