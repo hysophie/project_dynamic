@@ -241,7 +241,7 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 ---
 
 ###  Feature modeling & ML study 
-#### Overview
+
 #### pe-shared
 
 <details>
@@ -263,6 +263,7 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - Search1,Search2
   - 두 데이터셋은 구매를 하지 않은 경우에도 자료 포함. 
     - 데모데이터를 만든다면 비율을 어떻게 설정할지에 대한 근거로 활용 가능(특히 Session1)
+    > 재확인 결과, 구매를 하지 않은 경우에 자료가 포함된 것이 아니라, 여러검색어를 사용해서 행이 늘어난 경우 였음! 고유한 키 값으로는 오히려 전체 세션보다 작은 값이 나옴. 즉, 검색을 안하고 구매한 사람에 대한 정보와 검색을 하고 구매한 사람의 정보만 있음!
   - 전체검색량 대비 개인검색량을 개인적 관심의 측도로 사용.
   - 전체검색량의 추세를 변수로 사용. ex) 회귀직선의 기울기
   - 그 외에도 search1, search2는 변수들 간의 조합을 통해 유의미한 변수를 찾을 수 있을 것으로 예상 
@@ -379,7 +380,7 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 
 </details>
 
-
+#### Overview
 #### Contents and Decisions
 
 1. 우리의 Dynamic pricing의 방향은?
