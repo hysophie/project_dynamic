@@ -381,6 +381,10 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 </details>
 
 #### Overview
+- 일시: 2019.05.11 17:00~18:00
+- 작성자: 최보경
+- 참석자: 최보경, 오동건, 이현아, 류승우
+
 #### Contents and Decisions
 
 1. 우리의 Dynamic pricing의 방향은?
