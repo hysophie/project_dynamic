@@ -14,8 +14,6 @@ Search1 = pd.read_csv(os.listdir()[3])
 Search2 = pd.read_csv(os.listdir()[4])
 
 
-# Session과 pruduct의 고유한 키값이 동일하다. 
-# pruduct에 포함되지 않지만 Session에는 포함되는 데이터가 있으면 Session의 고유한 키값이 더 많아야한다. 
 
 #%% data Cleansing & preprocessing
 Session = pd.read_csv(r'C:\DATA\L.point2019\data\Session.csv')
@@ -51,4 +49,10 @@ Session['DAY'] = list(map(lambda x:datetime.strptime(x, '%Y-%m-%d').weekday(),Se
 raw = pd.merge(Pruduct,Custom, how = 'left', on = ['CLNT_ID']) 
 raw = pd.merge(raw,Master, how = 'left', on = ['PD_C']) 
 raw = pd.merge(raw,Session, how = 'left', on = ['CLNT_ID','SESS_ID']) 
+raw2 = pd.merge(raw,Search1, how = 'left', on = ['CLNT_ID','SESS_ID']) 
 
+# search1 키값을 기준으로 변수 전처리 필요! 
+Search1= Search1.sort_values('CLNT_ID')
+Search1.head()
+len(Search1.loc[:,['CLNT_ID','SESS_ID']].drop_duplicates())
+raw.head()
