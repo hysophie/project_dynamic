@@ -241,7 +241,7 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 ---
 
 ###  Feature modeling & ML study 
-#### Overview
+
 #### pe-shared
 
 <details>
@@ -253,7 +253,7 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - 다만, 데모데이터를 만들지 않고 **'재구매여부'** 를 y로 사용할 수 도 있을 듯. 특정 세션이 후 며칠 이내에 재구매를 했으면 1값을 주고 하지 않았으면 0값을 주는 방향으로, 이런 접근은 지금의 데이터로 충분히 만들 수 있고, 변수 설명도 의미를 가짐. (의미 있는 EDA의 가능성.)
 
 2. feature modeling
-- Session, Pruduct 데이터를 중심으로 전처리와 변수 추가. (code uploaded) 
+- Session, Pruduct 데이터를 중심으로 전처리와 변수 추가.(code uploaded), Search1,2는 논의 할 부분이 있기 때문에 idea를 우선 제시  
 - Session
   - SESS_DT 변수를 활용해, 구매가 이루어진 시점의 월, 주, 요일 변수 추가.
   - 추후 휴일여부, 주말여부, 계절도 포함을 시킬 지 논의.
@@ -263,10 +263,58 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 - Search1,Search2
   - 두 데이터셋은 구매를 하지 않은 경우에도 자료 포함. 
     - 데모데이터를 만든다면 비율을 어떻게 설정할지에 대한 근거로 활용 가능(특히 Session1)
-  - 두 데이터셋을 어떻게 활용할지는 분석방식을 어떻게 할지에 따라 달라질 것으로 예상. 
-
-- Pruduct, Session, Master를 병합해서 5백만\*24 dataframe을 생성
+    > 재확인 결과, 구매를 하지 않은 경우에 자료가 포함된 것이 아니라, 여러검색어를 사용해서 행이 늘어난 경우 였음! 고유한 키 값으로는 오히려 전체 세션보다 작은 값이 나옴. 즉, 검색을 안하고 구매한 사람에 대한 정보와 검색을 하고 구매한 사람의 정보만 있음!
+  - 전체검색량 대비 개인검색량을 개인적 관심의 측도로 사용.
+  - 전체검색량의 추세를 변수로 사용. ex) 회귀직선의 기울기
+  - 그 외에도 search1, search2는 변수들 간의 조합을 통해 유의미한 변수를 찾을 수 있을 것으로 예상 
+  > 검색어 데이터 활용 사례 조사해도 좋을 듯? 
+		
+- 우선은 Pruduct, Session, Master를 병합해서 5백만\*24 dataframe을 생성
   - 분석 방향을 구체적으로 결정한 이후, Search1을 Search2 데이터를 어떻게 넣을 지 고민 필요. 
+  
+  종찬 : 
+  1. 구매량/검색량 혹은 머무는 시간 y 제안
+  - 전략 : 가격을 잘 비교하지 않는 꼼꼼하지 않은 유저(호구)를 구별하여 가격을 높인다.
+  - 검색을 많이 하면서도/머무는 시간이 많으면서도 구매량이 낮은 경우 비호구일 가능성이 높다는 가정  
+  - 따라서 y가 낮을 수록 비호구일 가능성이 높다고 가정
+  - 이러한 호구 및 비호구들의 Session 패턴학습
+  
+보경:
+- pruduct 데이터 중심 이해와 전처리(pruduct_type. csv & product 분류별 평균 가격 & COUNT.ipynb 추후 업로드)
+- 대분류 37가지, 중분류 128가지
+- 평균 가격 높은 중분류: DIY 가구 > 냉장고 > 세탁기 > 컴퓨터 > TV
+- 평균 가격 낮은 중분류: 속옷/양말 < 필기도구 < 닭고기류
+- (직관적이나) 중분류의 평균 가격이 낮을 수록 / 구매 횟수가 많음을 확인하였음. 
+하지만! '닭고기'의 경우 평균 가격이 6위로 낮지만 구매 횟수가 하위 18위 -> 롯데 계열사 온라인 채널로 굳이 축산물 및 소비재를 사려하지 않는가?
+주로 의류, 패션, 가구 등의 상품목으로 구성되어 있음
+- offline retail stores에 대한 product category 분류 모델은 논문들에서 많으나, e-commerce product category 분류 모델은 찾아보지 못했음.
+
+현아:
+
+	Feature 후보
+-	우리의 딥러닝 모델: 온라인 행동 데이터들을 input feature로 주고, 이 사람이 구매 여부의 label을 0,1로 줘서 학습시킴 -> output: 각 사용자의 해당 세션의 구매확률 예측
+1)	Session
+-	구매한 세션의 간격 (CLNT_ID별로, 직전 SESS_SEQ와의 gap)
+-	세션 접속한 device (DVC_CTG)
+2)	Pruduct
+-	특정 고객의 구매 상품의 다양성(상품 가짓수, 카테고리 개수) -> 그 사람이 모든 종류의 제품을 이 쇼핑몰에서 사고 있는지, 특정 제품or제품군만을 그 쇼핑몰에서 사고 있는지
+3)	Master
+-	구매한 제품의 중분류
+
+	Idea 제안
+1)	y label 제안 -> 구매한 고객 중에서도 충성고객(1) / 그냥고객(0)으로 label 붙이기
+-	충성고객: 구매금액x구매횟수가 일정 수준 이상인 고객
+-	그냥고객: 구매금액x구매횟수가 일정 수준 이하인 고객
+-	충성고객vs.그냥고객의 온라인 활동 패턴 학습 후, 특 정 고객이 충성고객이 될 가능성 예측
+2)	비지도학습도 시도해보는 건 어떨까?
+-	구매한 고객들 중에서도, Clustering을 통해 여러 cluster로 고객군 분류 -> cluster 별 구매금액/온라인 행동의 차이가 있는지
+
+	A/B test 고민해보기
+-	https://www.business-science.io/business/2019/03/11/ab-testing-machine-learning.html
+
+	그 외 읽은 참고자료
+-	https://towardsdatascience.com/an-overview-of-categorical-input-handling-for-neural-networks-c172ba552dee -> Handling categorical input for NN (one-hot encoding을 기본적으로 사용하지만, 다른 방법도 많음!
+-	https://www.upwork.com/hiring/for-clients/log-analytics-deep-learning-machine-learning/
 
 </details>
 
@@ -299,11 +347,71 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
  > 구매하지 않은 사람의 데이터를 GAN을 통해 얻어낸다는 것은 잘못된 것. -> 구매하지 않은 사람에 대한 고려는 다른 방식으로 이루어져야.
  > Neural Network 기반이기에 현재 우리가 향하고 있는 방향성과 잘 맞아 보이나, 다만, 모델의 이해나 적용이 결코 쉽지는 않아 보임. 
   
-- 모두를 위한 딥러닝 Lab 1, 8
+- 모두를 위한 딥러닝 Lab 1-4, 8
    - 텐서 overview
    - Dimension, Shape, Rank, Axis, Matmul, tf.reduce_mean, tf.reduce_sum, argmax, reshape(squeeze, expand), one hot, casting, stack
+
+보경:
+ - 모두를 한 딥러닝 RL 시즌 Lecture 1-3
+ - RL 기본: Agent가 전체 Environment의 각 State에서 Action을 하고 Rewards를 얻는다.
+ - Q-function
+ 	1) 개념: '내가 해봐서 아는데, 어떤 State에서 각 Action을 취하면? 이런 Reward(Quality, 즉 Q)를 주더라' 라고 알려주는 형님
+	2) Q-function의 가정
+	- S'에서는 Q를 안다고 가정한다.
+	- I am in s. When I do action a, I'll go to s'. When I do action a, I'll get reward r.
+	- Q in s', Q(S',a')이것은 이미 알고 있다고 가정 들어감(그 다음 state에서의 리워드를 안다고 가정하고 현 state에서의 리워즈 추정)
+	3) 공식화
+	- Q(s,a) = r+maxQ(s',a') <- r은 rewards	
+- Dummy Q-learning algorithm
+	>절차 
+	1) 각 s(state), a(action), 에서 Q hat(s,a)를 0으로 input
+	2) 현 s를 살핀다. 
+	3) 다음을 무한 반복한다.
+		Action a를 고르고 실행한다
+		당장의 reward r을 받는다
+		다음 state s'을 살핀다
+		Q hat(s,a) <- r(받은 reward) + maxQ(s',a')
+		S에서 s'로 넘어간다.
+
+현아:
+- 모두를 위한 딥러닝 Lab10, ConvNet의 conV 레이어 만들기
+- Lab 10 : NN for MNIST (relu 활용) -> Xavier initialization (weight 초기화) -> Dropout layer 넣기 (network이 깊어지면 overfitting의 문제가 생기는데, 이를 해결하기 위해 network 일부를 끊음) * Dropout 시에 주의할 점: train 할 때는 keep_prob(network의 몇%를 keep할 것인가)를 0.5~0.7 정도로, test 할때는 무조건 "1"
+- 다양한 종류의 optimizer : 일반적으로 ADAM optimizer를 많이 씀 (성능이 가장 좋아서) => tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+
 </details>
 
+#### Overview
+- 일시: 2019.05.11 17:00~18:00
+- 작성자: 최보경
+- 참석자: 최보경, 오동건, 이현아, 류승우
+
 #### Contents and Decisions
+
+1. 우리의 Dynamic pricing의 방향은?
+이미 살 사람이 지불할 가격을 변동시키는 것 << 살지 말지 고민하는 사람을 가격 변동을 통해 구매를 유도하는 것
+(Revenue 측면, 도덕 측면, 긍정적인 측면, 사업성 측면)
+
+Purchase behavior based segmentation(전통적)
+구매를 많이 하는 사람(할인을 해주는 것은 미래의 revenue를 그저 앞으로 당겨오는 것) / 구매를 한번도 한 적이 없는 사람 / 구매를 한-두번 한(재구매율이 낮은) 사람
+-> 어느 소비자를 프라이싱 변동을 통해 Revenue를 끌어 올리는게 좋을까? '구매를 한-두번 한 사람'으로 좁힌다.
+
+2. y값은? '재구매율'
+재구매율이 DP를 할 수 있는 완벽한 Key는 아니지만, 하나의 기준이 될 수 있다.
+검색만 하고 구매 안 한 애들(400만 가량)을 걸러내고, 집단 검색한 애들 중에서 구매한 애들만 KEEP하여 고려(500만 가량)
+구매를 안 한 애들에 대한 세션이 없어서 -> 검색 O, 구매 X는 버린다.
+
+3. 재구매율 패턴을 어떻게 잡을 것인가?
+-> 누가 5일 이내에 구매를 했는가 yes 1, no 0. 즉 101010101와 같은 binary type 후 mean으로 계산하여 가중치화
+
+4. 개인별 purchase 주기는?
+<- 논문 기반으로 e-commerce에서 참고
+
+5. 데이터가 6개월 어치인 한계
+<- 한계 보완 필요. 향후 논의
+
 #### Forward plans
+
+1. 상품분류를 전부 활용하여 모델링? (1) 변수에 넣을 것인가? (2) 상품 분류를 유의미할 분류만 활용해서 각 모델을 만들 것인가? 
+EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟수 많고 적고/ 소비재고 luxury냐 등
+2. 변수 생각, 데이터를 더 세밀히 보자.
 
