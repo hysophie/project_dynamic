@@ -415,3 +415,24 @@ Purchase behavior based segmentation(전통적)
 EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟수 많고 적고/ 소비재고 luxury냐 등
 2. 변수 생각, 데이터를 더 세밀히 보자.
 
+---
+
+###  Feature modeling & Preprocessing
+
+#### pe-shared
+
+<details>
+  <summary>Click to expand!</summary>
+
+
+</details>
+
+#### study contents
+
+<details>
+  <summary>Click to expand!</summary>
+	
+
+</details>
+
+#### Forward plans
