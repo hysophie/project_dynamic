@@ -49,10 +49,16 @@ Session['DAY'] = list(map(lambda x:datetime.strptime(x, '%Y-%m-%d').weekday(),Se
 raw = pd.merge(Pruduct,Custom, how = 'left', on = ['CLNT_ID']) 
 raw = pd.merge(raw,Master, how = 'left', on = ['PD_C']) 
 raw = pd.merge(raw,Session, how = 'left', on = ['CLNT_ID','SESS_ID']) 
-raw2 = pd.merge(raw,Search1, how = 'left', on = ['CLNT_ID','SESS_ID']) 
 
 # search1 키값을 기준으로 변수 전처리 필요! 
-Search1= Search1.sort_values('CLNT_ID')
-Search1.head()
+# 한 세션에서 총 검색량
+raw = pd.merge(raw,Search1.groupby(['CLNT_ID','SESS_ID']).sum().fillna(0), how = 'left', on = ['CLNT_ID','SESS_ID']) 
+# 한 세션에서 검색 종류
+raw = pd.merge(raw,Search1.groupby(['CLNT_ID','SESS_ID']).count()['KWD_NM'].fillna(0), how = 'left', on = ['CLNT_ID','SESS_ID']) 
+# 열 이름 변경 
+raw.rename(columns={'SEARCH_CNT': 'SEARCH_TOT_CNT', 'KWD_NM': 'KWD_NUM'}, inplace=True)
+
+# Search2 
+Search2= Search2.sort_values('SESS_DT')
+Search2.head()
 len(Search1.loc[:,['CLNT_ID','SESS_ID']].drop_duplicates())
-raw.head()
