@@ -13,8 +13,6 @@ Master = pd.read_csv(os.listdir()[1])
 Search1 = pd.read_csv(os.listdir()[3])
 Search2 = pd.read_csv(os.listdir()[4])
 
-
-
 #%% data Cleansing & preprocessing
 Session = pd.read_csv(r'C:\DATA\L.point2019\data\Session.csv')
 Pruduct = pd.read_csv(r'C:\DATA\L.point2019\data\Pruduct.csv')
@@ -45,20 +43,37 @@ Session['DAY'] = list(map(lambda x:datetime.strptime(x, '%Y-%m-%d').weekday(),Se
 
 ## HOLLY DAY도 추후 만듭시다 ㅎㅎ 
 
+# Search1, Search 2 전처리
+# merge를 위해 SESS_DT 형식 동일하게 변경. 
+Search2['SESS_DT'] = Search2['SESS_DT'].astype(str) # int object is not subsriptable 
+Search2['SESS_DT'] = list(map(lambda x:x[0:4] +'-'+x[4:6]+'-'+x[6:8],Search2['SESS_DT']))
+
+# 검색량 변수를 str&int -> int로 변환 후 이름 변경.
+Search2['SEARCH_CNT'] = Search2['SEARCH_CNT'].astype(str)
+Search2['SEARCH_CNT'] = list(map(lambda x:x.replace(",",""), Search2['SEARCH_CNT']))
+Search2['SEARCH_CNT'] =  Search2['SEARCH_CNT'].astype(int)
+Search2.rename(columns={'SEARCH_CNT': 'SEARCH_TOT'}, inplace=True)
+
+# 전체 검색량 대비 개인 검색량  변수 생성.
+Search = pd.merge(Search1,Session.loc[:,['CLNT_ID','SESS_ID','SESS_DT']],how = 'left', on = ['CLNT_ID','SESS_ID']) 
+Search = pd.merge(Search,Search2.loc[:,['SESS_DT','KWD_NM','SEARCH_TOT']],how = 'left', on = ['KWD_NM','SESS_DT']) 
+Search['SEARCH_RATIO'] = Search.SEARCH_CNT / Search.SEARCH_TOT
+
 # merge
 raw = pd.merge(Pruduct,Custom, how = 'left', on = ['CLNT_ID']) 
 raw = pd.merge(raw,Master, how = 'left', on = ['PD_C']) 
 raw = pd.merge(raw,Session, how = 'left', on = ['CLNT_ID','SESS_ID']) 
 
-# search1 키값을 기준으로 변수 전처리 필요! 
-# 한 세션에서 총 검색량
-raw = pd.merge(raw,Search1.groupby(['CLNT_ID','SESS_ID']).sum().fillna(0), how = 'left', on = ['CLNT_ID','SESS_ID']) 
-# 한 세션에서 검색 종류
-raw = pd.merge(raw,Search1.groupby(['CLNT_ID','SESS_ID']).count()['KWD_NM'].fillna(0), how = 'left', on = ['CLNT_ID','SESS_ID']) 
+Pruduct.head()
+# 한 세션에서 총 검색량 추가
+raw = pd.merge(raw,Search1.groupby(['CLNT_ID','SESS_ID']).sum(), how = 'left', on = ['CLNT_ID','SESS_ID']) 
+# 한 세션에서 검색 종류 추가
+raw = pd.merge(raw,Search1.groupby(['CLNT_ID','SESS_ID']).count()['KWD_NM'], how = 'left', on = ['CLNT_ID','SESS_ID']) 
 # 열 이름 변경 
 raw.rename(columns={'SEARCH_CNT': 'SEARCH_TOT_CNT', 'KWD_NM': 'KWD_NUM'}, inplace=True)
+# 전체 검색량 대비 개인 검색량  변수 추가.
+raw = pd.merge(raw,Search.groupby(['CLNT_ID','SESS_ID']).mean()['SEARCH_RATIO'], how = 'left', on = ['CLNT_ID','SESS_ID']) 
 
-# Search2 
-Search2= Search2.sort_values('SESS_DT')
-Search2.head()
-len(Search1.loc[:,['CLNT_ID','SESS_ID']].drop_duplicates())
+list(raw)
+raw.CLAC3_NM
+test = raw[raw.CLAC3_NM == '스킨케어세트']
