@@ -2,11 +2,12 @@ import pandas as pd
 import os 
 import re
 from datetime import datetime
+from tqdm import tqdm
 
 os.chdir(r'C:\DATA\L.point2019\data')
 os.listdir()
 
-Session = pd.read_csv(r'C:\DATA\L.point2019\data\Session.csv')
+Session = pd.read_csv(os.listdir()[-1])
 Pruduct = pd.read_csv(r'C:\DATA\L.point2019\data\Pruduct.csv')
 Custom = pd.read_csv(os.listdir()[0])
 Master = pd.read_csv(os.listdir()[1])
@@ -14,8 +15,6 @@ Search1 = pd.read_csv(os.listdir()[3])
 Search2 = pd.read_csv(os.listdir()[4])
 
 #%% data Cleansing & preprocessing
-Session = pd.read_csv(r'C:\DATA\L.point2019\data\Session.csv')
-Pruduct = pd.read_csv(r'C:\DATA\L.point2019\data\Pruduct.csv')
 
 # 브랜드 이름에서 [],() 기호 제거.
 Pruduct['PD_BRA_NM'] = list(map(lambda x:re.sub("[[,\](,)\s]", "",x),Pruduct['PD_BRA_NM']))
@@ -41,8 +40,17 @@ Session['WEEK'] = list(map(lambda x:datetime.strptime(x, '%Y-%U-%w').strftime('%
 ## 0 = 월요일, 6 = 일요일
 Session['DAY'] = list(map(lambda x:datetime.strptime(x, '%Y-%m-%d').weekday(),Session['SESS_DT'])) 
 
-## HOLLY DAY도 추후 만듭시다 ㅎㅎ 
+## 휴일 변수;REST 추가
+hoilday = ['2018-05-05', '2018-05-22', '2018-06-06', '2018-08-15', '2018-09-23', '2018-09-24', '2018-09-25']
 
+rest = []
+for idx, date in tqdm(enumerate(Session.SESS_DT)):
+    if date in hoilday or Session.DAY[idx] == 5 or Session.DAY[idx] == 6:
+        rest.append(1)
+    else:
+        rest.append(0)
+
+Session['REST'] = rest
 # Search1, Search 2 전처리
 # merge를 위해 SESS_DT 형식 동일하게 변경. 
 Search2['SESS_DT'] = Search2['SESS_DT'].astype(str) # int object is not subsriptable 
