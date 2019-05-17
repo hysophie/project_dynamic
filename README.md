@@ -316,6 +316,20 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 -	https://towardsdatascience.com/an-overview-of-categorical-input-handling-for-neural-networks-c172ba552dee -> Handling categorical input for NN (one-hot encoding을 기본적으로 사용하지만, 다른 방법도 많음!
 -	https://www.upwork.com/hiring/for-clients/log-analytics-deep-learning-machine-learning/
 
+승우:
+
+- y label: '재구매'여부 제안
+  - 세션을 왔다갔다 하기만 하고 구입하지 않는 사람
+   : 실제로 구입하는 고객들에게 가격 인하의 focus를 맞추어야 한다고 생각
+   : 현재 train data도 결국에는 물품을 구매한 적이 있는 사람들의 데이터이기 때문에, 
+     이 데이터를 갖고 구매하지 않은 고객들의 predict를 행하는 것은 무리가 있어 보임. 
+     > 결국 focus는 실제로 구매한 사람들의 데이터를 바탕으로 각종 feature들로 그들의 행동 양태를 예측하고 
+       집단군 별로 할인폭을 결정하는 방향으로 나아가야 한다고 생각. 
+     
+   : 문제는 과연 얼마를 주기로 물건을 구입하는 사람들에 focus를 맞출 것인가?
+     일주일에 한 번, 한 달에 한 번, 두 달에 한 번 구입하는 사람들에 대한 할인의 적용은 분명 달라야 한다고 생각.
+     자주 구입하는 사람들일수록 할인을 해주면 오히려 더 많은 수량을 구입할 가능성이 높기에? 
+
 </details>
 
 #### study contents
@@ -448,7 +462,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 
    - 6일전, 7일전은 결국 그 전 주 주말과 겹치기에 큰 의미를 두기 어려울 것 같다는 생각. 
    > 추후에, 평상적인 주말과 국가지정 공휴일 간의 차이도 살펴보도록 하겠음. 
-     - 당연히 건수로는 평상적인 주말이 훨씬 많을 것이기에, 각각 주말의 수, 공휴읠의 수를 기준으로 비율을 봐야할 것
+     - 당연히 건수로는 평상적인 주말이 훨씬 많을 것이기에, 각각 주말의 수, 공휴일의 수를 기준으로 비율을 봐야할 것
 
 </details>
 
