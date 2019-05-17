@@ -457,7 +457,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
   <summary>Click to expand!</summary>
 승우:
 
-- 모두를 위한 딥러닝 Lab 5-9 수강 .
+- 모두를 위한 딥러닝 Lab 5-10 수강 .
 
 </details>
 
