@@ -516,7 +516,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 
 #### Forward plans
 
-1. 승우: 휴일 4일전, 5일전 변수 만들기.  NA value
+1. 승우: 휴일 4일전, 5일전 변수 만들기.  NA value 기준 찾고 채우기
 2. 동건: 7일 단위 구매텀 정의 test,train set 나누기. 
 3. 보경: product data set 전처리.
 4. 종찬: product data set 전처리.
