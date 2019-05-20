@@ -1,8 +1,8 @@
 import pandas as pd
 import os 
 import re
-from datetime import datetime
 import pickle
+import matplotlib.pyplot as plt 
 
 os.chdir(r'C:\DATA\L.point2019\data')
 os.listdir()
@@ -37,20 +37,13 @@ Product_agg.columns= list(map(lambda x:x[0]+'_'+x[1],list(Product_agg)))
 
 
 #%% (2)Session
-# SESS_DT을 월, 주, 요일로 변환. 
-Session['SESS_DT'] = Session['SESS_DT'].astype(str) # int object is not subsriptable 
-Session['SESS_DT'] = list(map(lambda x:x[0:4] +'-'+x[4:6]+'-'+x[6:8],Session['SESS_DT']))
-Session['MONTH'] = list(map(lambda x:x[5:7],Session['SESS_DT']))
+# SESS_DT을 datetime 자료형으로 변환.
+Session['SESS_DT'] = pd.to_datetime(Session['SESS_DT'], format = '%Y%m%d')
+## 월,주,일 변수 생성. 19 -> 1월 1일 이후 19번째 주 double check  0 = 월요일, 6 = 일요일  double check
+Session['MONTH'] = list(map(lambda x:x.month,Session['SESS_DT'])) 
+Session['WEEK'] = list(map(lambda x:x.week,Session['SESS_DT'])) 
+Session['DAY'] = list(map(lambda x:x.weekday(),Session['SESS_DT'])) 
 
-## 월요일을 기준으로 2018-04-02은  04-02 ~ 04-08에 해당. 
-Session['WEEK'] = list(map(lambda x:datetime.strptime(x, '%Y-%m-%d').strftime('%Y-%U-1'),Session['SESS_DT'])) 
-Session['WEEK'] = list(map(lambda x:datetime.strptime(x, '%Y-%U-%w').strftime('%Y-%m-%d'),Session['WEEK'])) 
-
-## 0 = 월요일, 6 = 일요일 # 1:33
-start = datetime.now()
-Session['DAY'] = list(map(lambda x:datetime.strptime(x, '%Y-%m-%d').weekday(),Session['SESS_DT'])) 
-end = datetime.now()
-print (end - start)    
 
 ## 휴일 변수;REST 추가 #  2:29 by 승우.
 
@@ -90,3 +83,17 @@ raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID'])
 with open('raw.pickle', 'wb') as f:
     pickle.dump(raw, f)
 
+#%% (5) make y ## 진행중...
+
+Session = Session.sort_values(['CLNT_ID','SESS_DT']) # diff를 사용하기 위해 날짜순으로 정렬
+Session['DT_DIFF'] = Session['SESS_DT'].diff() # (1) 일단은 전체에 대해 차이를 구해준 다음
+Session.loc[Session.CLNT_ID != Session.CLNT_ID.shift(),'DT_DIFF'] = None # (2) ID가 바뀌는 시점은 nane 값을 재할당.
+
+Session['DT_DIFF'].describe()
+
+Session.DT_DIFF[1]
+test = Session[Session.DT_DIFF == '0 days 00:00:00']
+test2 = Session[Session.CLNT_ID == 556]
+test= Session.groupby('DT_DIFF',as_index=False).size().reset_index(name = 'count')
+test.hist()
+plt.plot(test['DT_DIFF'],test['count'])
