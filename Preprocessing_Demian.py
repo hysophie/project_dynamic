@@ -2,7 +2,8 @@ import pandas as pd
 import os 
 import re
 import pickle
-import matplotlib.pyplot as plt 
+from tqdm import tqdm
+from sklearn.model_selection import train_test_split
 
 os.chdir(r'C:\DATA\L.point2019\data')
 os.listdir()
@@ -44,14 +45,12 @@ Session['MONTH'] = list(map(lambda x:x.month,Session['SESS_DT']))
 Session['WEEK'] = list(map(lambda x:x.week,Session['SESS_DT'])) 
 Session['DAY'] = list(map(lambda x:x.weekday(),Session['SESS_DT'])) 
 
-
 ## 휴일 변수;REST 추가 #  2:29 by 승우.
 
 #%% (3) search1,2 서로 다른 key구조를 모델에 적용가능한 형태로 통일.
 
 # merge를 위해 SESS_DT 형식 동일하게 변경. 
-Search2['SESS_DT'] = Search2['SESS_DT'].astype(str) # int object is not subsriptable 
-Search2['SESS_DT'] = list(map(lambda x:x[0:4] +'-'+x[4:6]+'-'+x[6:8],Search2['SESS_DT']))
+Search2['SESS_DT'] = pd.to_datetime(Search2['SESS_DT'], format = '%Y%m%d')
 
 # 검색량 변수를 str&int -> int로 변환 후 이름 변경.
 Search2['SEARCH_CNT'] = Search2['SEARCH_CNT'].astype(str)
@@ -70,30 +69,45 @@ Search['SEARCH_RATIO'] = Search.SEARCH_CNT / Search.SEARCH_TOT
 with open('C:/DATA/L.point2019/derivation_data/Search.pickle','wb') as f:
     pickle.dump(Search,f)
 
-#%% (4) merge
 
-
-raw = pd.merge(Session,Custom, how = 'left', on = ['CLNT_ID']) 
-raw = pd.merge(raw,Product_agg, how = 'left', on = ['CLNT_ID']) 
-raw = pd.merge(raw,Master, how = 'left', on = ['PD_C']) 
-raw = pd.merge(raw,Session, how = 'left', on = ['CLNT_ID','SESS_ID']) 
-raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID']) 
-
-
-with open('raw.pickle', 'wb') as f:
-    pickle.dump(raw, f)
-
-#%% (5) make y ## 진행중...
+#%% (4) make y ## 진행중...
 
 Session = Session.sort_values(['CLNT_ID','SESS_DT']) # diff를 사용하기 위해 날짜순으로 정렬
 Session['DT_DIFF'] = Session['SESS_DT'].diff() # (1) 일단은 전체에 대해 차이를 구해준 다음
-Session.loc[Session.CLNT_ID != Session.CLNT_ID.shift(),'DT_DIFF'] = None # (2) ID가 바뀌는 시점은 nane 값을 재할당.
+Session = Session.loc[Session.CLNT_ID == Session.CLNT_ID.shift()]# (2) ID가 바뀌는 시점은 재구매기간을 특정할 수 없으므로 삭제.
 
-Session['DT_DIFF'].describe()
+days7 = Session.DT_DIFF[677236]
 
-Session.DT_DIFF[1]
-test = Session[Session.DT_DIFF == '0 days 00:00:00']
-test2 = Session[Session.CLNT_ID == 556]
-test= Session.groupby('DT_DIFF',as_index=False).size().reset_index(name = 'count')
-test.hist()
-plt.plot(test['DT_DIFF'],test['count'])
+Y = []
+for i in tqdm(Session.DT_DIFF):
+    if i <= days7:
+        Y.append(1)
+    else:
+        Y.append(0)
+
+Session['Y'] = Y
+
+#%% (5) merge
+
+
+raw = pd.merge(Session,Custom, how = 'left', on = ['CLNT_ID']) 
+raw = pd.merge(raw,Product_agg, how = 'left', on = ['CLNT_ID','SESS_ID']) 
+raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID']) 
+
+raw = raw.reindex(columns=sorted(list(raw)))
+
+with open('C:/DATA/L.point2019/derivation_data/raw.pickle', 'wb') as f:
+    pickle.dump(raw, f)
+    
+
+test = raw[0:100]
+train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
+
+train_set.Y.value_counts()[0] / train_set.Y.value_counts()[1]
+test_set.Y.value_counts()[0] / test_set.Y.value_counts()[1]
+
+with open('C:/DATA/L.point2019/derivation_data/train_set.pickle', 'wb') as f:
+    pickle.dump(train_set, f)
+    
+with open('C:/DATA/L.point2019/derivation_data/test_set.pickle', 'wb') as f:
+    pickle.dump(test_set, f)
