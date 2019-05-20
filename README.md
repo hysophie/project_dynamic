@@ -538,7 +538,9 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
   <summary>Click to expand!</summary>
 
 동건:  
-재구매율을 1,0으로 나누지 않고 처음부터 재구매기간을 예측하거나 아니면 multinomial classification을 재고해봐도 좋을 듯.
+- 재구매율을 1,0으로 나누지 않고 처음부터 재구매기간을 예측하거나 아니면 multinomial classification을 재고  
+- test/train 나눌 때, (1) 완전 무작위 (2) 월을 기준으로 (3) 고객을 기준으로  
+> 개인적으로는 월을 기준으로 나누는게 raw data의 squencial한 측면을 잘 살릴 수 있지 않을까 생각되는데, 논의 필요.
 
 승우:
 - EDA tactic 변경
