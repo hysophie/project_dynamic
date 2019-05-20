@@ -596,9 +596,9 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
       2. 결측치 끼리의 상관관계가 있는가? (Correlation with Missing Values)
       
      * 결측치의 원인 파악 및 원인에 따른 처리 방법 결정
-      -결측치 비율 10% 미만: 어떤 방법을 쓰든 상관 없이 Imputation
-      -10% 이상 ~ 20% 미만: hot deck, regression, model based method
-      -20% 이상 : regression, model based method
+       - 결측치 비율 10% 미만: 어떤 방법을 쓰든 상관 없이 Imputation
+       - 10% 이상 ~ 20% 미만: hot deck, regression, model based method
+       - 20% 이상 : regression, model based method
 
 </details>
 
