@@ -530,6 +530,8 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 > 대분류가 혼합되면 1~36까지의 숫자를 할당하면 될 것 같아요! 대분류가 36개 니깐..
 5. 현아: 구매텀 결정. 7일에 맞는 레퍼런스 찾기. & 이상치 제거 
 
+---
+
 ###  Feature modeling & Preprocessing (3)
 
 #### pre-shared
@@ -592,8 +594,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 #### Contents and Decisions
 #### Forward plans
 
-
-</details>
+---
 
 ###  Example
 
