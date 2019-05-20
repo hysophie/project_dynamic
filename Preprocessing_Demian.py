@@ -1,9 +1,7 @@
 import pandas as pd
 import os 
-
 import re
 from datetime import datetime
-from tqdm import tqdm
 import pickle
 
 os.chdir(r'C:\DATA\L.point2019\data')
@@ -13,7 +11,7 @@ Session = pd.read_csv(os.listdir()[-1])
 Pruduct = pd.read_csv(r'C:\DATA\L.point2019\data\Pruduct.csv')
 Custom = pd.read_csv(os.listdir()[0])
 Master = pd.read_csv(os.listdir()[1])
-Search1 = pd.read_csv(os.listdir()[3])
+Search1 = pd.read_csv(os.listdir()[3], encoding = 'utf-8')   
 Search2 = pd.read_csv(os.listdir()[4])
 
 #%% data Cleansing & preprocessing
