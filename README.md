@@ -404,13 +404,11 @@ Dynamic pricing on e-commerce platform with deep reinforcement learning
 1. 우리의 Dynamic pricing의 방향은?  
 이미 살 사람이 지불할 가격을 변동시키는 것 << 살지 말지 고민하는 사람을 가격 변동을 통해 구매를 유도하는 것
 (Revenue 측면, 도덕 측면, 긍정적인 측면, 사업성 측면)
-
 Purchase behavior based segmentation(전통적)
 구매를 많이 하는 사람(할인을 해주는 것은 미래의 revenue를 그저 앞으로 당겨오는 것) / 구매를 한번도 한 적이 없는 사람 / 구매를 한-두번 한(재구매율이 낮은) 사람
 -> 어느 소비자를 프라이싱 변동을 통해 Revenue를 끌어 올리는게 좋을까? '구매를 한-두번 한 사람'으로 좁힌다.
 
-2. y값은? '재구매율'  Feature modeling & Preprocessing (2)
-
+2. y값은? '재구매율'  
 재구매율이 DP를 할 수 있는 완벽한 Key는 아니지만, 하나의 기준이 될 수 있다.
 검색만 하고 구매 안 한 애들(400만 가량)을 걸러내고, 집단 검색한 애들 중에서 구매한 애들만 KEEP하여 고려(500만 가량)
 구매를 안 한 애들에 대한 세션이 없어서 -> 검색 O, 구매 X는 버린다.
