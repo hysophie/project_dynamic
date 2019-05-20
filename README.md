@@ -602,7 +602,18 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 
          * 결측치를 avg, median, mode 등으로 단순 대체하는 방법은 최대한 쓰지 말 것을 강조. Bias가 커지고, 변수들간 관계 왜곡. 
 	    -> 모델링의 결과에 악영향.
-	 
+	
+	
+현아:
+
+1) 재구매 term 결정
+- "6일"로 결정 (6일을 기준으로 나누었을 때 0과 1 각 label에 배정되는 데이터의 갯수가 가장 유사함)
+- Reference: 인터넷 쇼핑 행태 리포트에 따르면, 인터넷 쇼핑몰 사용자들은 평균적으로 "5.08일"에 한 번씩 쇼핑함. (https://www.digieco.co.kr/KTFront/board/board_view.action?board_id=issue_trend&sort_order=&kind=&list_page=2&list_gubun=title&list_gubun2=&searchtext=&board_seq=12059&etc1=387&etc2=#)
+
+2) 이상치 제거 기준
+- "한 고객의 한 세션에서의 총 구매금액"의 상위 3%를 이상치로 간주
+- Reference: 인터넷 쇼핑몰에서의 1회 평균 구매금액은 7.2만원(PC), 6.0만원(모바일)
+- 상위 3% 제거 시, 1회 평균 구매금액은 74,515원 / 1회 구매금액의 최댓값은 397,940원(상식 수준에서 받아들일 수 있는 금액임)
    
 </details>
 
