@@ -1,10 +1,10 @@
 import pandas as pd
 import os 
+
 import re
 from datetime import datetime
 from tqdm import tqdm
 import pickle
-
 
 os.chdir(r'C:\DATA\L.point2019\data')
 os.listdir()
@@ -45,17 +45,8 @@ Session['DAY'] = list(map(lambda x:datetime.strptime(x, '%Y-%m-%d').weekday(),Se
 end = datetime.now()
 print (end - start)    
 
-## 휴일 변수;REST 추가 #  2:29
-hoilday = ['2018-05-05', '2018-05-22', '2018-06-06', '2018-08-15', '2018-09-23', '2018-09-24', '2018-09-25']
+## 휴일 변수;REST 추가 #  2:29 by 승우.
 
-rest = []
-for idx, date in tqdm(enumerate(Session.SESS_DT)):
-    if  Session.DAY[idx] >= 5 or date in hoilday: # or 논리연산자 구성할 때, True 빈도가 더 많은 것을 앞으로! 
-        rest.append(1)
-    else:
-        rest.append(0)
-
-Session['REST'] = rest
 
 # Search1, Search 2 전처리
 # merge를 위해 SESS_DT 형식 동일하게 변경. 
@@ -66,7 +57,7 @@ Search2['SESS_DT'] = list(map(lambda x:x[0:4] +'-'+x[4:6]+'-'+x[6:8],Search2['SE
 Search2['SEARCH_CNT'] = Search2['SEARCH_CNT'].astype(str)
 Search2['SEARCH_CNT'] = list(map(lambda x:x.replace(",",""), Search2['SEARCH_CNT']))
 Search2['SEARCH_CNT'] =  Search2['SEARCH_CNT'].astype(int)
-Search2.rename(columns={'SEARCH_CNT': 'SEARCH_TOT'}, inplace=True)
+Search2.rename(columns={'SEARCH_CNT': 'SEARCH_TOT'}, inplace=True) # Search1과 컬럼명이 동일하지만 의미가 다르므로 이름 변경.
 
 # 전체검색량, 검색 키워드 갯수, 개인검색량, 전체검색량 대비 개인 검색량, 변수 생성.
 Search = pd.merge(Search1,Session.loc[:,['CLNT_ID','SESS_ID','SESS_DT']],how = 'left', on = ['CLNT_ID','SESS_ID']) 
@@ -88,8 +79,4 @@ raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID'])
 
 with open('raw.pickle', 'wb') as f:
     pickle.dump(raw, f)
-
-
-with open('Search.pickle','rb') as f:
-    data = pickle.load(f)
 
