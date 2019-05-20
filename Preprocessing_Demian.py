@@ -7,27 +7,36 @@ import pickle
 os.chdir(r'C:\DATA\L.point2019\data')
 os.listdir()
 
-Session = pd.read_csv(os.listdir()[-1])
-Pruduct = pd.read_csv(r'C:\DATA\L.point2019\data\Pruduct.csv')
 Custom = pd.read_csv(os.listdir()[0])
 Master = pd.read_csv(os.listdir()[1])
-Search1 = pd.read_csv(os.listdir()[3], encoding = 'utf-8')   
-Search2 = pd.read_csv(os.listdir()[4])
+Product = pd.read_csv(os.listdir()[2])
+Search1 = pd.read_csv(os.listdir()[3])   
+Search2 = pd.read_csv(os.listdir()[-2])
+Session = pd.read_csv(os.listdir()[-1])
 
-#%% data Cleansing & preprocessing
-
+#%% data preprocessing
+#%% (1)Product -> 3개의 키값에서 2개의 키값으로 agg
 # 브랜드 이름에서 [],() 기호 제거.
-Pruduct['PD_BRA_NM'] = list(map(lambda x:re.sub("[[,\](,)\s]", "",x),Pruduct['PD_BRA_NM']))
+Product['PD_BRA_NM'] = list(map(lambda x:re.sub("[[,\](,)\s]", "",x),Product['PD_BRA_NM']))
 
 # 구매가격 변수를 str -> int 변환.
-Pruduct['PD_BUY_AM'] = list(map(lambda x:x.replace(",",""),Pruduct['PD_BUY_AM']))
-Pruduct['PD_BUY_AM'] = Pruduct['PD_BUY_AM'].astype(int)
+Product['PD_BUY_AM'] = list(map(lambda x:x.replace(",",""),Product['PD_BUY_AM']))
+Product['PD_BUY_AM'] = Product['PD_BUY_AM'].astype(int)
 
 # 구매개수 변수를 str&int -> int로 변환.
-Pruduct['PD_BUY_CT'] = Pruduct['PD_BUY_CT'].astype(str)
-Pruduct['PD_BUY_CT'] = list(map(lambda x:x.replace(",",""),Pruduct['PD_BUY_CT']))
-Pruduct['PD_BUY_CT'] = Pruduct['PD_BUY_CT'].astype(int)
+Product['PD_BUY_CT'] = Product['PD_BUY_CT'].astype(str)
+Product['PD_BUY_CT'] = list(map(lambda x:x.replace(",",""),Product['PD_BUY_CT']))
+Product['PD_BUY_CT'] = Product['PD_BUY_CT'].astype(int)
 
+## product에 새로운 열 "TOT_AM" 생성 (PD_BUY_AM는 제품 하나 당 개수이므로, 이를 구매한 제품의 갯수와 곱한 "총 지출 금액"이 "TOT_AM"임)
+Product["TOT_AM"] = Product["PD_BUY_AM"] * Product["PD_BUY_CT"]
+
+# CLNT_ID와 SESS_ID가 모두 같은 행들을 "TOT_AM","PD_BUY_CT","PD_BUY_AM"에 대해 합계,평균,표준편차를 구한 것
+Product_agg = Product.groupby(['CLNT_ID', 'SESS_ID'])[['TOT_AM','PD_BUY_CT','PD_BUY_AM']].agg(['sum','mean','std'])
+Product_agg.columns= list(map(lambda x:x[0]+'_'+x[1],list(Product_agg)))
+
+
+#%% (2)Session
 # SESS_DT을 월, 주, 요일로 변환. 
 Session['SESS_DT'] = Session['SESS_DT'].astype(str) # int object is not subsriptable 
 Session['SESS_DT'] = list(map(lambda x:x[0:4] +'-'+x[4:6]+'-'+x[6:8],Session['SESS_DT']))
@@ -45,8 +54,8 @@ print (end - start)
 
 ## 휴일 변수;REST 추가 #  2:29 by 승우.
 
+#%% (3) search1,2 서로 다른 key구조를 모델에 적용가능한 형태로 통일.
 
-# Search1, Search 2 전처리
 # merge를 위해 SESS_DT 형식 동일하게 변경. 
 Search2['SESS_DT'] = Search2['SESS_DT'].astype(str) # int object is not subsriptable 
 Search2['SESS_DT'] = list(map(lambda x:x[0:4] +'-'+x[4:6]+'-'+x[6:8],Search2['SESS_DT']))
@@ -65,11 +74,14 @@ Search = Search.groupby(['CLNT_ID','SESS_ID']).sum() # 이 부분에서 고유�
 Search['KWD_CNT'] = cnt
 Search['SEARCH_RATIO'] = Search.SEARCH_CNT / Search.SEARCH_TOT  
 
-with open('Search.pickle','wb') as f:
+with open('C:/DATA/L.point2019/derivation_data/Search.pickle','wb') as f:
     pickle.dump(Search,f)
-    
-# merge
-raw = pd.merge(Pruduct,Custom, how = 'left', on = ['CLNT_ID']) 
+
+#%% (4) merge
+
+
+raw = pd.merge(Session,Custom, how = 'left', on = ['CLNT_ID']) 
+raw = pd.merge(raw,Product_agg, how = 'left', on = ['CLNT_ID']) 
 raw = pd.merge(raw,Master, how = 'left', on = ['PD_C']) 
 raw = pd.merge(raw,Session, how = 'left', on = ['CLNT_ID','SESS_ID']) 
 raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID']) 
