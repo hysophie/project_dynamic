@@ -626,9 +626,8 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
    
    
 보경:
->
-File: preprocessing_accumulation_Bonnie.ipynb 와 session_result.csv
-맡은 부분: SESS_ID마다 구매한 상품들을 Stack - 그 상품들의 대분류(CLAC1_NM)를 Stack -> 대분류 구매 패턴 추출
+> File: preprocessing_accumulation_Bonnie.ipynb 와 session_result.csv
+> 맡은 부분: SESS_ID마다 구매한 상품들을 Stack - 그 상품들의 대분류(CLAC1_NM)를 Stack -> 대분류 구매 패턴 추출
 
 구매 패턴 추출에 있어서, 어떻게 상품구매 rows들을 담아냈는가? 
 >	- 36가지 대분류를 사전식 정렬(ㄱ-ㅎ) 후 0~36의 숫자에 할당
