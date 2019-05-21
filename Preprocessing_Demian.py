@@ -104,67 +104,16 @@ raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID'])
 raw = raw.reindex(columns=sorted(list(raw)))
 
 
-
-#%% (6) remove unused columns and outliers 
-
-
-#%% (7) NA processing
-
-#%% (8) make Dummy variables
-
-#%% (9) test/train & save
-
-
-
 with open('C:/DATA/L.point2019/derivation_data/raw.pickle', 'wb') as f:
     pickle.dump(raw, f)
     
 train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-test xgboost
-
-with open('C:/DATA/L.point2019/derivation_data/raw.pickle', 'rb') as f:
-    raw = pickle.load(f)
-
-list(raw)
-raw = raw.drop(['DT_DIFF','CITY_NM', 'CLNT_GENDER', 'DVC_CTG_NM', 'SESS_DT', 'TOT_SESS_HR_V', 'ZON_NM'], axis = 1)
-
-train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
-
-import xgboost as xgb
-train_X = train_set.iloc[:,:-1]
-train_y = train_set.iloc[:,-1]
-
-test_X = test_set.iloc[:,:-1]
-test_y = test_set.iloc[:,-1]
-
-start = datetime.now()
-gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
-end = datetime.now()
-print(end - start)
-
-predictions = gbm.predict(test_X)
-predictions = 0
-sum(test_y == predictions) / len(test_y)
-
-# feature importance
-list()
-print(gbm.feature_importances_)
-# plot
-pyplot.bar(range(len(model.feature_importances_)), model.feature_importances_)
-pyplot.show()
+with open('C:/DATA/L.point2019/derivation_data/train_set.pickle', 'wb') as f:
+    pickle.dump(train_set, f)
+    
+with open('C:/DATA/L.point2019/derivation_data/test_set.pickle', 'wb') as f:
+    pickle.dump(test_set, f)
+    
+#%% (6) 현아사마
