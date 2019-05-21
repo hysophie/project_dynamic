@@ -111,3 +111,5 @@ with open('C:/DATA/L.point2019/derivation_data/train_set.pickle', 'wb') as f:
     
 with open('C:/DATA/L.point2019/derivation_data/test_set.pickle', 'wb') as f:
     pickle.dump(test_set, f)
+    
+#%% (6) 현아사마
