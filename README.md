@@ -682,44 +682,44 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 #### Contents and Decisions
 
 1) 재구매 간격 label
-> 시간A와 시간B 사이의 재구매 간격에 대한 label은 시간A에 붙여주어야 함
-> 재구매 term을 continuous하게 예측하기 (개인 맞춤 dynamic pricing)!! 재구매 여부를 0,1로 예측하는 것(X) 
-> 이렇게 재구매 term을 예측했을 때의 단점: 학습 데이터가 편향되어 있는 문제
-> (대안) Multi-classification  지금은 0일~183일  짧은 기간 이후에 구매할 사람 vs. 중간 기간 이후에 구매할 사람 vs. 긴 기간 이후에 구매할 사람
+> - 시간A와 시간B 사이의 재구매 간격에 대한 label은 시간A에 붙여주어야 함
+> - 재구매 term을 continuous하게 예측하기 (개인 맞춤 dynamic pricing)!! 재구매 여부를 0,1로 예측하는 것(X) 
+> - 이렇게 재구매 term을 예측했을 때의 단점: 학습 데이터가 편향되어 있는 문제
+> - (대안) Multi-classification  지금은 0일~183일  짧은 기간 이후에 구매할 사람 vs. 중간 기간 이후에 구매할 사람 vs. 긴 기간 이후에 구매할 사람
 
 2) Train/Test dataset을 어떻게 나눌까?
-> 무작위로 나누기!
->	sequential하게 분석할 수는 없음
->	k-fold cross validation 시도해볼 수 있음
->	4,5,6,7,8,9 각 월 별로 균형을 맞춰서 train/test set을 나눌 수 있는 방법?
->	휴일, 일, 월 다 넣어서 모델 만들기
+> - 무작위로 나누기!
+>	- sequential하게 분석할 수는 없음
+>	- k-fold cross validation 시도해볼 수 있음
+>	- 4,5,6,7,8,9 각 월 별로 균형을 맞춰서 train/test set을 나눌 수 있는 방법?
+>	- 휴일, 일, 월 다 넣어서 모델 만들기
 
 3) CLNT_ID 관련 이슈
-> CLNT_ID는 같은데, SESS_ID는 다른 경우가 있음
-> 	CLNT_ID, SESS_ID 값을 multi-index로 하기
-> CLNT_ID 변수 아예 빼버리기 / 각 CLNT_ID 별로 모델을 따로 만들기 ...
+> - CLNT_ID는 같은데, SESS_ID는 다른 경우가 있음
+> 	- CLNT_ID, SESS_ID 값을 multi-index로 하기
+> - CLNT_ID 변수 아예 빼버리기 / 각 CLNT_ID 별로 모델을 따로 만들기 ...
 
 3) 그외 세부 결정사항
-> 0 days를 label에 포함시키기
-> SESS_SEQ의 차이를 변수로 만들어보기 (시간 남으면)
-> 성별 NA는 3으로 놓고 dummy 변수로 만들기
-> 한 session에 구매한 금액의 standard deviation은 NaN이 너무 많으니까 빼기
+> - 0 days를 label에 포함시키기
+> - SESS_SEQ의 차이를 변수로 만들어보기 (시간 남으면)
+> - 성별 NA는 3으로 놓고 dummy 변수로 만들기
+> - 한 session에 구매한 금액의 standard deviation은 NaN이 너무 많으니까 빼기
 
 4) 역할 분담
-> 종찬: y label 위로 올려주는 작업 (시간A 이후에 시간B에 재구매를 했다면, 시간A로 y label 옮겨주기)
-> 승우: NA 처리 / holiday 변수 수정
-> 동건: 전처리
-> 보경: 변수들 one-hot encoding
-> 현아: 이상치 제거 (0,1로 만들어놓기)
+> - 종찬: y label 위로 올려주는 작업 (시간A 이후에 시간B에 재구매를 했다면, 시간A로 y label 옮겨주기)
+> - 승우: NA 처리 / holiday 변수 수정
+> - 동건: 전처리
+> - 보경: 변수들 one-hot encoding
+> - 현아: 이상치 제거 (0,1로 만들어놓기)
 
 #### Forward plans
 
-> 이번주 금요일 자정: Raw data 전처리 완료
-> 이번주 토요일: 모여 모델링 Start
-> 6/4 화요일: 1차 발표, 그 전까지 보경 모델링 
-> 6/4 ~ 8일 주: 보경 모델링 선행
-> 6/18 ~ 22일 주: 동건, 승우, 현아, 종찬 모델링 스퍼트 내기
-> 6/22일 ~ 25일: PPT 준비 & 완성
+- 이번주 금요일 자정: Raw data 전처리 완료
+- 이번주 토요일: 모여 모델링 Start
+- 6/4 화요일: 1차 발표, 그 전까지 보경 모델링 
+- 6/4 ~ 8일 주: 보경 모델링 선행
+- 6/18 ~ 22일 주: 동건, 승우, 현아, 종찬 모델링 스퍼트 내기
+- 6/22일 ~ 25일: PPT 준비 & 완성
 ---
 
 ###  Example
