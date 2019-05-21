@@ -4,6 +4,8 @@ import re
 import pickle
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
+from datetime import datetime
+import numpy as np
 
 os.chdir(r'C:\DATA\L.point2019\data')
 os.listdir()
@@ -36,6 +38,11 @@ Product["TOT_AM"] = Product["PD_BUY_AM"] * Product["PD_BUY_CT"]
 Product_agg = Product.groupby(['CLNT_ID', 'SESS_ID'])[['TOT_AM','PD_BUY_CT','PD_BUY_AM']].agg(['sum','mean','std'])
 Product_agg.columns= list(map(lambda x:x[0]+'_'+x[1],list(Product_agg)))
 
+# 상품범주 변수 추가.
+Product = pd.merge(Product,Master, how = 'left', on = 'PD_C')
+CLAC1_NM_dict=dict((c, i) for i, c in enumerate(sorted(Product['CLAC1_NM'].unique())))
+Product = Product.replace({"CLAC1_NM": CLAC1_NM_dict}) #대분류 한글 -> 배정된 숫자로 변경
+
 
 #%% (2)Session
 # SESS_DT을 datetime 자료형으로 변환.
@@ -45,7 +52,7 @@ Session['MONTH'] = list(map(lambda x:x.month,Session['SESS_DT']))
 Session['WEEK'] = list(map(lambda x:x.week,Session['SESS_DT'])) 
 Session['DAY'] = list(map(lambda x:x.weekday(),Session['SESS_DT'])) 
 
-## 휴일 변수;REST 추가 #  2:29 by 승우.
+## 휴일 변수;REST 추가 
 
 #%% (3) search1,2 서로 다른 key구조를 모델에 적용가능한 형태로 통일.
 
@@ -70,7 +77,7 @@ with open('C:/DATA/L.point2019/derivation_data/Search.pickle','wb') as f:
     pickle.dump(Search,f)
 
 
-#%% (4) make y ## 진행중...
+#%% (4) make y 
 
 Session = Session.sort_values(['CLNT_ID','SESS_DT']) # diff를 사용하기 위해 날짜순으로 정렬
 Session['DT_DIFF'] = Session['SESS_DT'].diff() # (1) 일단은 전체에 대해 차이를 구해준 다음
@@ -85,7 +92,7 @@ for i in tqdm(Session.DT_DIFF):
     else:
         Y.append(0)
 
-Session['Y'] = Y
+Session['y'] = Y
 
 #%% (5) merge
 
@@ -96,18 +103,68 @@ raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID'])
 
 raw = raw.reindex(columns=sorted(list(raw)))
 
+
+
+#%% (6) remove unused columns and outliers 
+
+
+#%% (7) NA processing
+
+#%% (8) make Dummy variables
+
+#%% (9) test/train & save
+
+
+
 with open('C:/DATA/L.point2019/derivation_data/raw.pickle', 'wb') as f:
     pickle.dump(raw, f)
     
-
-test = raw[0:100]
 train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
 
-train_set.Y.value_counts()[0] / train_set.Y.value_counts()[1]
-test_set.Y.value_counts()[0] / test_set.Y.value_counts()[1]
 
-with open('C:/DATA/L.point2019/derivation_data/train_set.pickle', 'wb') as f:
-    pickle.dump(train_set, f)
-    
-with open('C:/DATA/L.point2019/derivation_data/test_set.pickle', 'wb') as f:
-    pickle.dump(test_set, f)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+test xgboost
+
+with open('C:/DATA/L.point2019/derivation_data/raw.pickle', 'rb') as f:
+    raw = pickle.load(f)
+
+list(raw)
+raw = raw.drop(['DT_DIFF','CITY_NM', 'CLNT_GENDER', 'DVC_CTG_NM', 'SESS_DT', 'TOT_SESS_HR_V', 'ZON_NM'], axis = 1)
+
+train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
+
+import xgboost as xgb
+train_X = train_set.iloc[:,:-1]
+train_y = train_set.iloc[:,-1]
+
+test_X = test_set.iloc[:,:-1]
+test_y = test_set.iloc[:,-1]
+
+start = datetime.now()
+gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
+end = datetime.now()
+print(end - start)
+
+predictions = gbm.predict(test_X)
+predictions = 0
+sum(test_y == predictions) / len(test_y)
+
+# feature importance
+list()
+print(gbm.feature_importances_)
+# plot
+pyplot.bar(range(len(model.feature_importances_)), model.feature_importances_)
+pyplot.show()
