@@ -722,24 +722,6 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 - 6/22일 ~ 25일: PPT 준비 & 완성
 ---
 
-###  Example
-
-#### pre-shared
-<details>
-  <summary>Click to expand!</summary>
-
-</details>
-
-#### study contents
-<details>
-  <summary>Click to expand!</summary>
-
-</details>
-
-#### Overview
-#### Contents and Decisions
-#### Forward plans
-
 ###  Feature modeling & Preprocessing (4)
 
 #### pre-shared
