@@ -626,6 +626,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
    
    
 보경:
+.
 맡은 부분: SESS_ID마다 구매한 상품들을 Stack - 그 상품들의 대분류(CLAC1_NM)를 Stack -> 대분류 구매 패턴 추출
 > File: preprocessing_accumulation_Bonnie.ipynb 와 session_result.csv
 
@@ -641,7 +642,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 >	- 일단은 코드 내에 중복되는 Session ID를 리스트로 뽑아 냈음 (redundant_key의 리스트에 담아둠, 향후 활용)
 >	- 즉, 일단은 최초 마주치는 Session ID의 구매 패턴만 딕셔너리에 저장하고 나머지 같은 Session ID는 skip and append to list
 >	- Henry의 데이터프레임과 연결할 때에는 Dictionary mapping 활용하여서 -> 다른 client들인데 같은 구매 패턴 벡터가 변수로 들어가게 됨.
->	- Henry 변수들에 NaN이 
+>	- Henry 변수들에 NaN이 많은데 무슨 일일까?
 	
 이 문제를 향후 어떻게 해결할까?
 >	- 해결 방안1 : SESS_ID 겹치는 2만개 가량의 Records를 제거한다 -> 데이터 손실, 쉬움
