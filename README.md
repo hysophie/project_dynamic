@@ -605,10 +605,12 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
      * 결측치의 원인 파악 및 원인에 따른 처리 방법 결정
       1. 합리적 접근법: 변수들 간의 관계를 이용해서 결측값을 채워 넣는다.   
       2. 완전 제거법: 결측치가 있는 행 자체를 지워버린다.
+         -> 불가: 데이터 반 이상이 지워짐.
       3. 다중 대체법: 하나의 observation에 2개 이상의 결측치가 존재할 때. (가장 어려운 대체 방법)
 
          * 결측치를 avg, median, mode 등으로 단순 대체하는 방법은 최대한 쓰지 말 것을 강조. Bias가 커지고, 변수들간 관계 왜곡. 
 	    -> 모델링의 결과에 악영향.
+	    - sklearn.preprocessing Imputer에 쉽게 이 값들로 impute할 수 있는 패키지가 있기는 함  
 	
        - 데이터 결측치 분포
          - 'CLNT_AGE', 'CLNT_GENDER', 'KWD_CNT', 'PD_BUY_AM_std', 'PD_BUY_CT_std', 'SEARCH_CNT', 'SEARCH_RATIO', 'SEARCH_TOT',   
