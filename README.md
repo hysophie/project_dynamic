@@ -735,7 +735,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
    - children_hotday: 어린이날 -3~-6일 -> 1
    - teacher_hotday: 스승의날 -1일 -> 1
    - election_hotday: 지방선거일 -2~-3일 -> 1
- * 최종 merged 데이터가 나오면  채우기.  
+ * 최종 merged 데이터가 나오면 결측 채우기.  
 </details>
 
 #### study contents
