@@ -709,7 +709,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 > - 종찬: y label 위로 올려주는 작업 (시간A 이후에 시간B에 재구매를 했다면, 시간A로 y label 옮겨주기)
 > - 승우: NA 처리 / holiday 변수 수정
 > - 동건: 전처리
-> - 보경: 변수들 one-hot encoding
+> - 보경: 변수들 one-hot encoding / Product vector 변수 수정 
 > - 현아: 이상치 제거 (0,1로 만들어놓기)
 
 #### Forward plans
