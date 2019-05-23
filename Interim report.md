@@ -27,8 +27,7 @@
 1. Session
 2. Product
 3. Search
-4. Custom
-5. 이상치 및 NA 처리
+4. 이상치 및 NA 처리
 
 #### 추후 과제
 1. 딥러닝 모델링
