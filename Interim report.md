@@ -13,9 +13,8 @@
 #### 사용 데이터 소개
 1. 수집기간 및 수집량
 2. 데이터별 변수 설명 
-- Session
+- Session ( row,columns,key value)
   - 한줄 요약
-  - key value
   - 변수 설명
 - Product 
 - Master 
