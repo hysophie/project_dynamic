@@ -104,7 +104,8 @@ temp2_df.head()
 
 
 # ## Phase2. 
-# #### SESS_ID로 정렬된 Dataframe을 역행하여 {(CLNT_ID,SESS_ID): 36개의 대분류 구매 빈도 vector}의 Dictionary 생성. Vector 형태로 Key를 만든 이유는? Multiindex인 Dataframe.index.values하면 tuple형태로 나와서 mapping 편리하게 하기 위함임
+# #### SESS_ID로 정렬된 Dataframe을 역행하여 {(CLNT_ID,SESS_ID): 36개의 대분류 구매 빈도 vector}의 Dictionary 생성. 
+# #### Vector 형태로 Key를 만든 이유는? Multiindex인 Dataframe.index.values하면 tuple형태로 나와서 mapping 편리하게 하기 위함임
 
 # In[22]:
 
