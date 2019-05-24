@@ -754,7 +754,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
    -  각 163개, 3개, 3개, 16개의 Unique 값을 지님
    -  도시명은 변수가 너무 많아져 삭제 - 성별, 사용자기기, 행정구역 One-hot encoding으로 변수 유지 => 총합 48개 가량 column의 raw data가 됨
  * preprocessing_Demian.py 항목들 수정하였음
- 
+   -  의문점: Product dataset 전처리 부분에 벡터 만드는 세세한 코드도 넣나요? 아님 pickle로 간단히?
  
 </details>
 
