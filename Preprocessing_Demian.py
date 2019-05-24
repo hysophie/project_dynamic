@@ -1,3 +1,5 @@
+# 0. Settings
+
 import pandas as pd
 import os 
 import re
@@ -17,8 +19,11 @@ Search1 = pd.read_csv(os.listdir()[3])
 Search2 = pd.read_csv(os.listdir()[-2])
 Session = pd.read_csv(os.listdir()[-1])
 
-#%% data preprocessing
-#%% (1)Product -> 3개의 키값에서 2개의 키값으로 agg
+#%% 1. Data preprocessing
+
+#%% (1) Dataset 'Product'
+
+# -> 3개의 키값에서 2개의 키값으로 agg
 # 브랜드 이름에서 [],() 기호 제거.
 Product['PD_BRA_NM'] = list(map(lambda x:re.sub("[[,\](,)\s]", "",x),Product['PD_BRA_NM']))
 
@@ -38,13 +43,13 @@ Product["TOT_AM"] = Product["PD_BUY_AM"] * Product["PD_BUY_CT"]
 Product_agg = Product.groupby(['CLNT_ID', 'SESS_ID'])[['TOT_AM','PD_BUY_CT','PD_BUY_AM']].agg(['sum','mean','std'])
 Product_agg.columns= list(map(lambda x:x[0]+'_'+x[1],list(Product_agg)))
 
-# 상품범주 변수 추가.
+# SESS_ID별 구매한 상품 대분류 패턴 파악 - 향후 Mapping (Bonnie 수정 예정)
 Product = pd.merge(Product,Master, how = 'left', on = 'PD_C')
 CLAC1_NM_dict=dict((c, i) for i, c in enumerate(sorted(Product['CLAC1_NM'].unique())))
 Product = Product.replace({"CLAC1_NM": CLAC1_NM_dict}) #대분류 한글 -> 배정된 숫자로 변경
 
+#%% (2) Dataset 'Session'
 
-#%% (2)Session
 # SESS_DT을 datetime 자료형으로 변환.
 Session['SESS_DT'] = pd.to_datetime(Session['SESS_DT'], format = '%Y%m%d')
 ## 월,주,일 변수 생성. 19 -> 1월 1일 이후 19번째 주 double check  0 = 월요일, 6 = 일요일  double check
@@ -54,7 +59,8 @@ Session['DAY'] = list(map(lambda x:x.weekday(),Session['SESS_DT']))
 
 ## 휴일 변수;REST 추가 
 
-#%% (3) search1,2 서로 다른 key구조를 모델에 적용가능한 형태로 통일.
+#%% (3) Dataset 'search1','search2'
+# 서로 다른 key구조를 모델에 적용가능한 형태로 통일.
 
 # merge를 위해 SESS_DT 형식 동일하게 변경. 
 Search2['SESS_DT'] = pd.to_datetime(Search2['SESS_DT'], format = '%Y%m%d')
@@ -76,8 +82,7 @@ Search['SEARCH_RATIO'] = Search.SEARCH_CNT / Search.SEARCH_TOT
 with open('C:/DATA/L.point2019/derivation_data/Search.pickle','wb') as f:
     pickle.dump(Search,f)
 
-
-#%% (4) make y 
+#%% (4) Make y 
 
 Session = Session.sort_values(['CLNT_ID','SESS_DT']) # diff를 사용하기 위해 날짜순으로 정렬
 Session['DT_DIFF'] = Session['SESS_DT'].diff() # (1) 일단은 전체에 대해 차이를 구해준 다음
@@ -94,8 +99,7 @@ for i in tqdm(Session.DT_DIFF):
 
 Session['y'] = Y
 
-#%% (5) merge
-
+#%% (5) Merge datasets
 
 raw = pd.merge(Session,Custom, how = 'left', on = ['CLNT_ID']) 
 raw = pd.merge(raw,Product_agg, how = 'left', on = ['CLNT_ID','SESS_ID']) 
@@ -103,17 +107,51 @@ raw = pd.merge(raw,Search,how = 'left', on = ['CLNT_ID','SESS_ID'])
 
 raw = raw.reindex(columns=sorted(list(raw)))
 
-
 with open('C:/DATA/L.point2019/derivation_data/raw.pickle', 'wb') as f:
     pickle.dump(raw, f)
     
-train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
+#%% (6) Product Vector mapping
+    
+# multi Index로 바꾸어 raw2
+raw=raw.set_index(['CLNT_ID', 'SESS_ID'])
 
+# product 구매 패턴 vector를 mapping
+with open('PD_CT_Vec.pickle','rb') as vec:
+    prod_count_dict=pickle.load(vec)
+with open('PD_BIN_Vec.pickle','rb') as vec:
+    prod_bin_dict=pickle.load(vec)
+
+raw['PD_CT_Vec'] = raw.index.to_series().map(prod_count_dict)
+raw['PD_BIN_Vec'] = raw.index.to_series().map(prod_bin_dict)
+
+#%% (7) 결측치 처리
+
+
+#%% (8) One-hot encoding
+
+# 도시명은 163개 Unique 값으로, encoding시 너무 많아져 삭제
+del(raw['CITY_NM'])
+
+# 성별(CLNT_GENDER), 사용자 기기(DVC_CTG_NM), 행정구역(ZON_NM)은 encoding
+encode_df=pd.get_dummies(raw[['CLNT_GENDER','ZON_NM','DVC_CTG_NM']])
+
+# encode_df를 따로 만들어 기존 raw에 join하는 방식으로 했음
+raw=raw.join(encode_df)
+
+# 그 후에 따로 기존 string 변수 컬럼 삭제
+del(raw['CLNT_GENDER'])
+del(raw['DVC_CTG_NM'])
+del(raw['ZON_NM'])
+
+with open('raw.pickle','wb')as handle:
+    pickle.dump(raw,handle)
+    
+#%% (9) Data split 
+
+train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
 
 with open('C:/DATA/L.point2019/derivation_data/train_set.pickle', 'wb') as f:
     pickle.dump(train_set, f)
     
 with open('C:/DATA/L.point2019/derivation_data/test_set.pickle', 'wb') as f:
     pickle.dump(test_set, f)
-    
-#%% (6) 현아사마
