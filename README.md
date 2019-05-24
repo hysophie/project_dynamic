@@ -738,11 +738,11 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
  
  * NA value 채우기
   - 채워야 할 변수: 'CLNT_AGE', 'CLNT_GENDER', 'KWD_CNT', 'SEARCH_CNT', 'SEARCH_RATIO', 'SEARCH_TOT', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'
-  * CLNT_AGE, CLNT_GENDER 결측값 observation 제거
-    - CLNT_AGE: NaN 값의 분포가 'CLNT_GENDER'와 정확히 일치 -> 비회원 구매 케이스
-    - 1. Multinomial Regression, RF_Classifier 등: NA가 있는 모델에서는 작동하지 않음.
+  * CLNT_AGE, CLNT_GENDER 결측값 존재하는 observation 제거
+    > CLNT_AGE: NaN 값의 분포가 'CLNT_GENDER'와 정확히 일치 -> 비회원 구매 케이스
+    > 1. Multinomial Regression, RF_Classifier 등: NA가 있는 모델에서는 작동하지 않음.
          중요변수인 CLNT_AGE, GLNT_GENDER를 predict하기 위해 다른 변수들의 NA값을 자의적으로 채우는 것은 곧 BIAS를 키우는 일
-    - 2. 상관관계의 절대값이 0.1을 넘는 변수도 SESS_SEQ 하나 뿐(0.15) (하지만 SESS_SEQ가 성별과의 연관성을 말해줄 수는 없다.)  
+    > 2. 상관관계의 절대값이 0.1을 넘는 변수도 SESS_SEQ 하나 뿐(0.15) (하지만 SESS_SEQ가 성별과의 연관성을 말해줄 수는 없다.)  
 
     - CLNT_AGE, CLNT_GENDER 결측치의 관찰값 비율은 약 12% 정도. -> 아예 해당 row를 지워버리기로 결정. :약 156만 건 남음.
   
