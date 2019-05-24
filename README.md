@@ -747,9 +747,9 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
  * Product vector 변수 (CLNT_ID, SESS_ID)의 고유한 tuple로 모든 벡터 유지하였음 -> pickle
  * One-hot Encoding
    -  string 형태의 변수는 현재 4가지
-   	> 도시명(CITY_NM),성별(CLNT_GENDER), 사용자 기기(DVC_CTG_NM), 행정구역(ZON_NM)
-	> 각 163개, 3개, 3개, 16개의 Unique 값을 지님
-	> 도시명은 변수가 너무 많아져 삭제 - 성별, 사용자기기, 행정구역 One-hot encoding으로 변수 유지
+   -  도시명(CITY_NM),성별(CLNT_GENDER), 사용자 기기(DVC_CTG_NM), 행정구역(ZON_NM)
+   -  각 163개, 3개, 3개, 16개의 Unique 값을 지님
+   -  도시명은 변수가 너무 많아져 삭제 - 성별, 사용자기기, 행정구역 One-hot encoding으로 변수 유지
 
  
 </details>
