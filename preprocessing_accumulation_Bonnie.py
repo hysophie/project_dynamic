@@ -169,26 +169,7 @@ while True:
 # 벡터가 잘 만들어졌는지 확인
 len(prod_bin_dict)==len(temp_df)
 
-
-# ## Phase3. 
-# #### MultiIndex의 데이터프레임(Example_df)과 연결방법
-
-# In[157]:
-
-
-Example_df['PD_CT_Vec'] = Example_df.index.to_series().map(prod_count_dict)
-Example_df['PD_BIN_Vec'] = Example_df.index.to_series().map(prod_bin_dict)
-
-
-# In[162]:
-
-
-# 결측치 있는지 확인
-print(Example_df['PD_CT_Vec'].isnull().sum())
-print(Example_df['PD_BIN_Vec'].isnull().sum())
-
-
-# #### 벡터 활용 시 코드 실행하는데 30분은 소요되니 Pickle 쓰세요
+# #### To pickles
 
 # In[163]:
 
@@ -200,3 +181,43 @@ with open('PD_CT_Vec.pickle','wb')as handle:
 with open('PD_BIN_Vec.pickle','wb')as handle:
     pickle.dump(prod_bin_dict,handle)
 
+
+# ## Phase3. 
+# #### raw dataframe과 연결
+
+# In[157]:
+
+with open('raw.pickle','rb') as raw:
+    raw=pickle.load(raw)
+
+raw=raw.set_index(['CLNT_ID', 'SESS_ID'])
+
+raw['PD_CT_Vec'] = raw.index.to_series().map(prod_count_dict)
+raw['PD_BIN_Vec'] = raw.index.to_series().map(prod_bin_dict)
+
+# In[162]:
+
+
+# 결측치 있는지 확인
+print(raw['PD_CT_Vec'].isnull().sum())
+print(raw['PD_BIN_Vec'].isnull().sum())
+
+# ## One hot Encoding
+
+# 도시명은 163개 Unique 값으로, encoding시 너무 많아져 삭제
+del(raw['CITY_NM'])
+
+# 성별(CLNT_GENDER), 사용자 기기(DVC_CTG_NM), 행정구역(ZON_NM)은 encoding
+encode_df=pd.get_dummies(raw[['CLNT_GENDER','ZON_NM','DVC_CTG_NM']])
+
+# encode_df를 따로 만들어 기존 raw에 join하는 방식으로 했음
+raw=raw.join(encode_df)
+
+# 그 후에 따로 기존 string 변수 컬럼 삭제
+del(raw['CLNT_GENDER'])
+del(raw['DVC_CTG_NM'])
+del(raw['ZON_NM'])
+
+# to pickles
+with open('raw.pickle','wb')as handle:
+    pickle.dump(raw,handle)
