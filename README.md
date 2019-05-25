@@ -737,7 +737,7 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
    - election_hotday: 지방선거일 -2~-3일 -> 1
  
  * NA value 채우기
-  - 채워야 할 변수: 'CLNT_AGE', 'CLNT_GENDER', 'KWD_CNT', 'SEARCH_CNT', 'SEARCH_RATIO', 'SEARCH_TOT', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'
+   - 채워야 할 변수: 'CLNT_AGE', 'CLNT_GENDER', 'KWD_CNT', 'SEARCH_CNT', 'SEARCH_RATIO', 'SEARCH_TOT', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'
  
    - 두 가지 방향에서 고민 중
      - 1. CLNT_AGE, CLNT_GENDER 변수가 중요
