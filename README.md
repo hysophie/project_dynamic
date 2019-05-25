@@ -730,33 +730,33 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
 
 승우:
  * 변수설명
-   - Rest: 휴일 -> 1
-   - five_before: 토요일 -5일 -> 1 (평일 국가 공휴일은 제외)
-   - children_hotday: 어린이날 -3~-6일 -> 1
-   - teacher_hotday: 스승의날 -1일 -> 1
-   - election_hotday: 지방선거일 -2~-3일 -> 1
+ >  - Rest: 휴일 -> 1
+ >  - five_before: 토요일 -5일 -> 1 (평일 국가 공휴일은 제외)
+ >  - children_hotday: 어린이날 -3~-6일 -> 1
+ >  - teacher_hotday: 스승의날 -1일 -> 1
+ >  - election_hotday: 지방선거일 -2~-3일 -> 1
  
  * NA value 채우기
-   - 채워야 할 변수: 'CLNT_AGE', 'CLNT_GENDER', 'KWD_CNT', 'SEARCH_CNT', 'SEARCH_RATIO', 'SEARCH_TOT', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'
+ > - 채워야 할 변수: 'CLNT_AGE', 'CLNT_GENDER', 'KWD_CNT', 'SEARCH_CNT', 'SEARCH_RATIO', 'SEARCH_TOT', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'
  
-   - 두 가지 방향에서 고민 중
-    - 1. CLNT_AGE, CLNT_GENDER 변수가 중요
-     > CLNT_AGE의 결측치는 곧 CLNT_GENDER의 결측치 -> 비회원 구매 (비율 약 12%)
+ >  - 두 가지 방향에서 고민 중
+ >   - 1. CLNT_AGE, CLNT_GENDER 변수가 중요
+ >    > CLNT_AGE의 결측치는 곧 CLNT_GENDER의 결측치 -> 비회원 구매 (비율 약 12%)
      
-     > 각 observation이 두 변수 모두가 비어있기 때문에 상관관계가 거의 없는 다른 변수들을 갖고 이들을 예측하는 것은 bias가 너무 커질 것
+ >    > 각 observation이 두 변수 모두가 비어있기 때문에 상관관계가 거의 없는 다른 변수들을 갖고 이들을 예측하는 것은 bias가 너무 커질 것
      
-     > '약 13% observation 날리고, 나머지 87% 데이터로 진행하는 것은 어떨까'라는 1안
-    - 2. softmax를 써서 CLNT_AGE군 예측을 해보려고 함.
-     > 2-(1) 괜찮은 연속형 설명 변수 두 개('PD_BUY_AM_mean', 'PD_BUY_CT_mean')로 성능 테스트  
-      -- 성능: 약 0.4129
-     > 2-(2) 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V' 결측치가 0.01%도 안돼 
-     > 얘네 결측치 지우고 4개의 설명 변수 ('PD_BUY_AM_mean', 'PD_BUY_CT_mean', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V')
-      -- 성능: 약 .4199
+ >    > '약 13% observation 날리고, 나머지 87% 데이터로 진행하는 것은 어떨까'라는 1안
+ >    - 2. softmax를 써서 CLNT_AGE군 예측을 해보려고 함.
+ >    > 2-(1) 괜찮은 연속형 설명 변수 두 개('PD_BUY_AM_mean', 'PD_BUY_CT_mean')로 성능 테스트  
+ >     -- 성능: 약 0.4129
+ >    > 2-(2) 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V' 결측치가 0.01%도 안돼 
+ >    > 얘네 결측치 지우고 4개의 설명 변수 ('PD_BUY_AM_mean', 'PD_BUY_CT_mean', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V')
+ >     -- 성능: 약 .4199
 
-     > 따라서, CLNT_AGE 결측치 행 지우거나 말거나인데, 각각의 장단점이 있다.
+ >    > 따라서, CLNT_AGE 결측치 행 지우거나 말거나인데, 각각의 장단점이 있다.
      
-    > 어차피 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'는 결측치 비율이 많지 않아서 나중에 해당 observation은 지워도 상관x
-    > 나머지 변수들의 NA 비율은 50%가 넘는데? 중요한 정보인 건 맞는데 너무 심해서.. 
+ >   > 어차피 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'는 결측치 비율이 많지 않아서 나중에 해당 observation은 지워도 상관x
+ >   > 나머지 변수들의 NA 비율은 50%가 넘는데? 중요한 정보인 건 맞는데 너무 심해서.. 
 	
  
   
