@@ -747,12 +747,15 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
      
      - 2. softmax를 써서 CLNT_AGE군 예측을 해보려고 함.
        > 2-(1) 괜찮은 연속형 설명 변수 두 개('PD_BUY_AM_mean', 'PD_BUY_CT_mean')로 성능 테스트  
-	 - 성능: 약 0.4129
+	 > 성능: 약 0.4129
        > 2-(2) 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V' 결측치가 0.01%도 안돼 
          - 얘네 결측치 지우고 4개의 설명 변수 ('PD_BUY_AM_mean', 'PD_BUY_CT_mean', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V')
-	 - 성능: 약 .4199
+	 > 성능: 약 .4199
 
      > 따라서, CLNT_AGE 결측치 행 지우거나 말거나인데, 각각의 장단점이 있다.
+     
+     > 어차피 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'는 결측치 비율이 많지 않아서 나중에 해당 observation은 지워도 상관x
+     > 나머지 변수들의 NA 비율은 50%가 넘는데? 중요한 정보인 건 맞는데 너무 심해서.. 
 	
  
   
