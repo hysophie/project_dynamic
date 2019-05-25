@@ -175,10 +175,6 @@ raw=raw.set_index(['CLNT_ID', 'SESS_ID'])
 raw['PD_CT_Vec'] = raw.index.to_series().map(prod_count_dict)
 raw['PD_BIN_Vec'] = raw.index.to_series().map(prod_bin_dict)
 
-# 결측치 있는지 확인
-print(raw['PD_CT_Vec'].isnull().sum())
-print(raw['PD_BIN_Vec'].isnull().sum())
-
 # ## One hot Encoding
 # 도시명은 163개 Unique 값으로, encoding시 너무 많아져 삭제
 del(raw['CITY_NM'])
@@ -200,7 +196,6 @@ with open('raw.pickle','wb')as handle:
 
 #%% (7) 결측치 및 이상치 처리
 
-    
 #%% (8) Data split 
 
 train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
