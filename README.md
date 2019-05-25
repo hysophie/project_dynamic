@@ -746,9 +746,9 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
        > 약 13% observation 날리고, 나머지 87% 데이터로 진행하는 것은 어떨까
      
      - 2. softmax를 써서 CLNT_AGE군 예측을 해보려고 함.
-        > 2-(1) 괜찮은 연속형 설명 변수 두 개('PD_BUY_AM_mean', 'PD_BUY_CT_mean')로 성능 테스트  
+       > 2-(1) 괜찮은 연속형 설명 변수 두 개('PD_BUY_AM_mean', 'PD_BUY_CT_mean')로 성능 테스트  
 	 - 성능: 약 0.4129
- 	> 2-(2) 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V' 결측치가 0.01%도 안돼 
+       > 2-(2) 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V' 결측치가 0.01%도 안돼 
          - 얘네 결측치 지우고 4개의 설명 변수 ('PD_BUY_AM_mean', 'PD_BUY_CT_mean', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V')
 	 - 성능: 약 .4199
 
