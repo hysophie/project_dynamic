@@ -740,17 +740,17 @@ EX. 중분류/ 대분류/ 또 다른 기준(가격이 높고 낮고/ 구매횟�
     - 채워야 할 변수: 'CLNT_AGE', 'CLNT_GENDER', 'KWD_CNT', 'SEARCH_CNT', 'SEARCH_RATIO', 'SEARCH_TOT', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V'
  
     - 두 가지 방향에서 고민 중
-     - 1. CLNT_AGE, CLNT_GENDER 변수가 중요
-      > CLNT_AGE의 결측치는 곧 CLNT_GENDER의 결측치 -> 비회원 구매 (비율 약 12%)
-      > 각 observation이 두 변수 모두가 비어있기 때문에 상관관계가 거의 없는 다른 변수들을 갖고 이들을 예측하는 것은 bias가 너무 커질 것
-      > 약 13% observation 날리고, 나머지 87% 데이터로 진행하는 것은 어떨까
+      - 1. CLNT_AGE, CLNT_GENDER 변수가 중요
+       > CLNT_AGE의 결측치는 곧 CLNT_GENDER의 결측치 -> 비회원 구매 (비율 약 12%)
+       > 각 observation이 두 변수 모두가 비어있기 때문에 상관관계가 거의 없는 다른 변수들을 갖고 이들을 예측하는 것은 bias가 너무 커질 것
+       > '약 13% observation 날리고, 나머지 87% 데이터로 진행하는 것은 어떨까'라는 1안
      
-     - 2. softmax를 써서 CLNT_AGE군 예측을 해보려고 함.
-      > 2-(1) 괜찮은 연속형 설명 변수 두 개('PD_BUY_AM_mean', 'PD_BUY_CT_mean')로 성능 테스트  
-       - 성능: 약 0.4129
-      > 2-(2) 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V' 결측치가 0.01%도 안돼 
-       - 얘네 결측치 지우고 4개의 설명 변수 ('PD_BUY_AM_mean', 'PD_BUY_CT_mean', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V')
-       - 성능: 약 .4199
+      - 2. softmax를 써서 CLNT_AGE군 예측을 해보려고 함.
+       > 2-(1) 괜찮은 연속형 설명 변수 두 개('PD_BUY_AM_mean', 'PD_BUY_CT_mean')로 성능 테스트  
+        > 성능: 약 0.4129
+       > 2-(2) 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V' 결측치가 0.01%도 안돼 
+        > 얘네 결측치 지우고 4개의 설명 변수 ('PD_BUY_AM_mean', 'PD_BUY_CT_mean', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V')
+        > 성능: 약 .4199
 
       > 따라서, CLNT_AGE 결측치 행 지우거나 말거나인데, 각각의 장단점이 있다.
      
