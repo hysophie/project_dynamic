@@ -6,7 +6,8 @@ import re
 import pickle
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 import numpy as np
 
 os.chdir(r'C:\DATA\L.point2019\data')
@@ -50,7 +51,84 @@ session['MONTH'] = list(map(lambda x:x.month,session['SESS_DT']))
 session['WEEK'] = list(map(lambda x:x.week,session['SESS_DT'])) 
 session['DAY'] = list(map(lambda x:x.weekday(),session['SESS_DT'])) 
 
-## 휴일 변수;REST 추가 
+## 휴일 변수; EDA후 유의미하게 구매패턴이 차이나는 'hot day'를 추가
+
+session['Timestamp'] = 0
+session['SESS_DT'] = session['SESS_DT'].astype('str')
+session['SESS_DT'] = list(map(lambda x:datetime.strptime(x,'%Y%m%d'), session['SESS_DT']))
+session['Timestamp'] = list(map(lambda x:datetime.timestamp(x), session['SESS_DT']))
+
+Sat = pd.date_range(min(session.SESS_DT), max(session.SESS_DT), freq='W-SAT') #Saturday
+Sun = pd.date_range(min(session.SESS_DT), max(session.SESS_DT), freq='W-SUN') #Sunday
+
+Sat_Timestamp=list(map(lambda x:datetime.timestamp(x), Sat))
+Sun_Timestamp=list(map(lambda x:datetime.timestamp(x), Sun))
+
+Holiday = np.array(['20180505', '20180522', '20180606', '20180815', '20180923', '20180924', '20180925', ])
+repic_Holiday = np.array(['20180507', '20180613', '20180926']) #5월7일, 9월26일: 대체 공휴일,6월 13일: 지방선거일
+Holiday = np.append(Holiday, repic_Holiday)
+Holiday = list(map(lambda x:datetime.strptime(x,'%Y%m%d'), Holiday))
+
+Holiday_Timestamp=list(map(lambda x:datetime.timestamp(x), Holiday))
+
+All_Timestamp = Sat_Timestamp + Sun_Timestamp + Holiday_Timestamp
+
+session.ix[session['Timestamp'].isin(All_Timestamp),'Rest']=1
+
+session['Rest'] = 0 #휴일인 날
+
+weekend_Timestamp = Sat_Timestamp
+weekend_Timestamp = list(map(lambda x:datetime.fromtimestamp(x), weekend_Timestamp))
+
+session['five_before'] = 0
+session.ix[session['SESS_DT'].isin(list(map(lambda x: x+timedelta(days=-5), weekend_Timestamp))), 'five_before'] = 1
+
+# 어린이날 추가
+children_day = np.array(['2018-05-05'])
+children_day = list(map(lambda x:datetime.strptime(x,'%Y-%m-%d'), children_day))
+children_hotdays = []
+
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-3), children_day))[0])
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-4), children_day))[0])
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-5), children_day))[0])
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-6), children_day))[0])
+
+session['children_hotday'] = 0
+session.ix[session['SESS_DT'].isin(children_hotdays),'children_hotday'] = 1
+
+# 스승의 날 추가
+teacher_day = np.array(['2018-05-15'])
+teacher_day = list(map(lambda x:datetime.strptime(x,'%Y-%m-%d'), teacher_day))
+teacher_hotdays = []
+
+teacher_hotdays.append(list(map(lambda x: x+timedelta(days=-1), teacher_day))[0])
+
+session['teacher_hotday'] = 0
+session.ix[session['SESS_DT'].isin(teacher_hotdays), 'teacher_hotday'] = 1
+
+# 선거일 추가
+election_day = np.array(['2018-06-13']) 
+election_day = list(map(lambda x:datetime.strptime(x,'%Y-%m-%d'), election_day))
+
+election_hotdays = []
+
+election_hotdays.append(list(map(lambda x: x+timedelta(days=-2), election_day))[0])
+election_hotdays.append(list(map(lambda x: x+timedelta(days=-3), election_day))[0])
+
+session['election_hotday'] = 0
+session.ix[session['SESS_DT'].isin(election_hotdays), 'election_hotday'] = 1
+
+# Multi Index로 바꾸어 merge 위해 hotday dataframe으로 정리해둠
+hotday=session.set_index(['CLNT_ID', 'SESS_ID'])
+
+del(hotday['DVC_CTG_NM'])
+del(hotday['ZON_NM'])
+del(hotday['CITY_NM'])
+del(hotday['Timestamp'])
+del(hotday['Rest'])
+del(hotday['SESS_DT'])
+
+hotday.sort_index(inplace=True,ascending=True)
 
 #%% (3) Dataset 'search1','search2'
 
@@ -85,8 +163,9 @@ Y = session['DT_DIFF'].dt.days.tolist() # date 형태를 int 형태로 변형
 a = list()
 a.append(np.nan)
 Y = Y[1:]+a # 한칸씩 올리고 마지막에 np.nan 추가 
-session['y']=Y #라벨 추가
+session['y']=Y # 라벨 추가
 session = session[pd.notnull(session['y])] # 라벨값이 np.nan인경우
+del raw['DT_DIFF'] # it was just once used to make response variable.
 
 #%% (5) Merge datasets
 
@@ -98,6 +177,7 @@ raw = raw.reindex(columns=sorted(list(raw)))
     
 #%% (6) Product Vector mapping
 
+# ## Phase1.
 # #### SESS_ID마다 구매한 상품 쌓아 - 그 대분류 쌓아 - 대분류 구매 패턴 (빈도 / 여부)
 # #### 변수 1 : 세션 내 쇼핑 Category 구매 빈도(단순 횟수)
 # #### 변수 2 : 세션 내 쇼핑 Category 구매 여부(0,1 binary vec)
@@ -175,30 +255,69 @@ raw=raw.set_index(['CLNT_ID', 'SESS_ID'])
 raw['PD_CT_Vec'] = raw.index.to_series().map(prod_count_dict)
 raw['PD_BIN_Vec'] = raw.index.to_series().map(prod_bin_dict)
 
-# ## One hot Encoding
+
+#%% (7) 결측치 및 이상치 처리
+
+raw.loc[raw.loc[:,'CLNT_GENDER'].isna()==True,'CLNT_GENDER'] = 'M_OR_F'
+
+raw = raw.loc[raw.loc[:,'TOT_SESS_HR_V'].isna()==False, :]
+raw = raw.loc[raw.loc[:,'TOT_PAG_VIEW_CT'].isna()==False,:]
+
+raw.loc[raw.loc[:,"KWD_CNT"].isna()==True,'KWD_CNT'] = 0
+raw.loc[raw.loc[:,"SEARCH_CNT"].isna()==True,'SEARCH_CNT'] = 0
+raw.loc[raw.loc[:,"SEARCH_RATIO"].isna()==True,'SEARCH_RATIO'] = 0
+raw.loc[raw.loc[:,"SEARCH_TOT"].isna()==True,'SEARCH_TOT'] = 0
+
+raw.loc[raw.loc[:,"CLNT_AGE"].isna()==True,'CLNT_AGE'] = 0
+                                     
+age_group = [0.0, 20.0, 30.0, 40.0]
+raw = raw.ix[raw['CLNT_AGE'].isin(age_group),:]                                     
+                                     
+#%% (8) One hot Encoding
+                                     
 # 도시명은 163개 Unique 값으로, encoding시 너무 많아져 삭제
 del(raw['CITY_NM'])
 
-# 성별(CLNT_GENDER), 사용자 기기(DVC_CTG_NM), 행정구역(ZON_NM)은 encoding
-encode_df=pd.get_dummies(raw[['CLNT_GENDER','ZON_NM','DVC_CTG_NM']])
+# 나이대(CLNT_AGE), 성별(CLNT_GENDER), 사용자 기기(DVC_CTG_NM), 행정구역(ZON_NM)은 encoding
+encode_df=pd.get_dummies(raw[['CLNT_AGE','CLNT_GENDER','ZON_NM','DVC_CTG_NM']])
 
 # encode_df를 따로 만들어 기존 raw에 join하는 방식으로 했음
 raw=raw.join(encode_df)
-
+                                     
 # 그 후에 따로 기존 string 변수 컬럼 삭제
 del(raw['CLNT_GENDER'])
 del(raw['DVC_CTG_NM'])
 del(raw['ZON_NM'])
 
-# to pickles
+# 요일, 주, 월 변수 one hot encoding
+raw['DAY']=raw['DAY'].astype(str)
+raw['KWD_CNT']=raw['KWD_CNT'].astype(str)
+raw['MONTH']=raw['MONTH'].astype(str)
+
+encode_df2=pd.get_dummies(raw3[['DAY','KWD_CNT','MONTH']])
+
+# join the encoded dataframe
+raw=raw.join(encode_df2)
+                            
+#%% (9) Adding 'hotday' dataframe & to pickles
+
+raw_final=pd.merge(raw, hotday, how='inner',left_index=True,right_index=True)                                  
+raw_final.sort_index(inplace=True)
+raw_final.head()
+
+# 불필요 컬럼 정리
+del(raw_final['DAY'])
+del(raw_final['KWD_CNT'])
+del(raw_final['MONTH'])
+del(raw_final['SESS_DT'])
+
+# to pickles 
 with open('raw.pickle','wb')as handle:
-    pickle.dump(raw,handle)
+    pickle.dump(raw_final,handle)
 
-#%% (7) 결측치 및 이상치 처리
+#%% (10) Data split 
 
-#%% (8) Data split 
-
-train_set, test_set = train_test_split(raw, test_size=0.3, random_state=42)
+train_set, test_set = train_test_split(raw_final, test_size=0.3, random_state=42)
 
 with open('C:/DATA/L.point2019/derivation_data/train_set.pickle', 'wb') as f:
     pickle.dump(train_set, f)
