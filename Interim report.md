@@ -32,7 +32,80 @@
 - 상세 설명,'변수설명.docx' 첨부파일 
 
 #### 전처리 과정
-1. Session
+
+1. Product
+- Main key값에 맞게 데이터 집적
+- 구매 총액, 평균, 분산, 상품갯수 등을 생성.
+- 상품 구매 품목 패턴은 대분류를 기준으로 one-hot 인코딩, 구매빈도/구매여부 변수를 생성.
+  - ex) 한 세션에서 여성의류를 산 고객 = (1,0,0,0, ... ,0,0)
+  - ex) 한 세션에서 여성의류와 남성의류를 산 고객 = (1,1,0,0, ... ,0,0)
+  - ex) 한 세션에서 여성의류 3번 산 고객 = (3,0,0, ... ,0,0)
+
+<details>
+  <summary>Click to show code!</summary>
+
+  <pre>
+    <code>
+# -> 3개의 키값에서 2개의 키값으로 agg
+
+# 구매가격 변수를 str -> int 변환.
+product['PD_BUY_AM'] = list(map(lambda x:x.replace(",",""),product['PD_BUY_AM']))
+product['PD_BUY_AM'] = product['PD_BUY_AM'].astype(int)
+
+# 구매개수 변수를 str&int -> int로 변환.
+product['PD_BUY_CT'] = product['PD_BUY_CT'].astype(str)
+product['PD_BUY_CT'] = list(map(lambda x:x.replace(",",""),product['PD_BUY_CT']))
+product['PD_BUY_CT'] = product['PD_BUY_CT'].astype(int)
+
+## product에 새로운 열 "TOT_AM" 생성 (PD_BUY_AM는 제품 하나 당 개수이므로, 이를 구매한 제품의 갯수와 곱한 "총 지출 금액"이 "TOT_AM"임)
+product["TOT_AM"] = product["PD_BUY_AM"] * product["PD_BUY_CT"]
+
+# CLNT_ID와 SESS_ID가 모두 같은 행들을 "TOT_AM","PD_BUY_CT","PD_BUY_AM"에 대해 합계,평균,표준편차를 구한 것
+product_agg = product.groupby(['CLNT_ID', 'SESS_ID'])[['TOT_AM','PD_BUY_CT','PD_BUY_AM']].agg(['sum','mean','std'])
+product_agg.columns= list(map(lambda x:x[0]+'_'+x[1],list(product_agg)))
+    </code>
+  </pre>
+</details>
+
+
+2. Search
+- Main key값에 맞게 데이터 집적
+- 개인이 검색한 검색어의 수 (KWD_CNT)
+- 개인의 총 검색량 (SEARH_CNT)
+- 검색어의 당일 검색량 (SEARH_TOT)
+- 개인의 총 검색량 / 검색어의 당일 검색량 
+  - ex) SEARH_CNT = 5, KWD_CNT = 2, SEARCH_RATIO = 0.01, SEARCH_TOT = 500 이면, 고객은 한세션에서 2개의 검색어를 가지고 5번 검색을 했고, 두 개의 검색어는 당일 총 500번 검색되었다. 따라서 SERCH_RATIO = 5/500 이 된다.
+  
+<details>
+  <summary>Click to show code!</summary>
+
+  <pre>
+    <code>
+    
+# 서로 다른 key구조를 모델에 적용가능한 형태로 통일.
+
+# merge를 위해 SESS_DT 형식 동일하게 변경. 
+search2['SESS_DT'] = pd.to_datetime(search2['SESS_DT'], format = '%Y%m%d')
+
+# 검색량 변수를 str&int -> int로 변환 후 이름 변경.
+search2['SEARCH_CNT'] = search2['SEARCH_CNT'].astype(str)
+search2['SEARCH_CNT'] = list(map(lambda x:x.replace(",",""), search2['SEARCH_CNT']))
+search2['SEARCH_CNT'] =  search2['SEARCH_CNT'].astype(int)
+search2.rename(columns={'SEARCH_CNT': 'SEARCH_TOT'}, inplace=True) # Search1과 컬럼명이 동일하지만 의미가 다르므로 이름 변경.
+
+# 전체검색량, 검색 키워드 갯수, 개인검색량, 전체검색량 대비 개인 검색량, 변수 생성.
+search = pd.merge(search1,session.loc[:,['CLNT_ID','SESS_ID','SESS_DT']],how = 'left', on = ['CLNT_ID','SESS_ID']) 
+search = pd.merge(search,search2.loc[:,['SESS_DT','KWD_NM','SEARCH_TOT']],how = 'left', on = ['KWD_NM','SESS_DT']) 
+cnt = search.groupby(['CLNT_ID','SESS_ID']).count()['KWD_NM'] # 순서 유의.
+search = search.groupby(['CLNT_ID','SESS_ID']).sum() # 이 부분에서 고유한 키값으로 줄어듬. 
+search['KWD_CNT'] = cnt
+search['SEARCH_RATIO'] = search.SEARCH_CNT / search.SEARCH_TOT  
+    </code>
+  </pre>
+</details>
+
+
+3. Session
 - 기념일변수
   - 어린이날, 지방선거, 어버이날등 기념일을 고려하여 변수 생성 
   - 각 기념일 전 시점에서 구매량이 증가는 패턴을 고려
@@ -131,22 +204,31 @@ hotday.sort_index(inplace=True,ascending=True)
     </code>
   </pre>
 </details>
-2. Product
-- Main key값에 맞게 데이터 집적
-- 구매 총액, 평균, 분산, 상품갯수 등을 생성.
-- 상품 구매 품목 패턴은 대분류를 기준으로 one-hot 인코딩, 구매빈도/구매여부 변수를 생성.
-  - ex) 한 세션에서 여성의류를 산 고객 = (1,0,0,0, ... ,0,0)
-  - ex) 한 세션에서 여성의류와 남성의류를 산 고객 = (1,1,0,0, ... ,0,0)
-  - ex) 한 세션에서 여성의류 3번 산 고객 = (3,0,0, ... ,0,0)
-  
-3. Search
-- Main key값에 맞게 데이터 집적
-- 개인이 검색한 검색어의 수 (KWD_CNT)
-- 개인의 총 검색량 (SEARH_CNT)
-- 검색어의 당일 검색량 (SEARH_TOT)
-- 개인의 총 검색량 / 검색어의 당일 검색량 
-  - ex) SEARH_CNT = 5, KWD_CNT = 2, SEARCH_RATIO = 0.01, SEARCH_TOT = 500 이면, 고객은 한세션에서 2개의 검색어를 가지고 5번 검색을 했고, 두 개의 검색어는 당일 총 500번 검색되었다. 따라서 SERCH_RATIO = 5/500 이 된다.
 
+4. y labeling
+1. 날짜간의 차이를 구하고
+2. CLNT_ID가 변하는 경우에만 none으로 수정
+3. y를 한칸씩 값을 올려서 학습될 y값과 x들의 row를 동일하게 맞춤. 
+<details>
+  <summary>Click to show code!</summary>
+  <pre>
+    <code>
+## y labeling
+# 날짜 차이 구하기
+session = session.sort_values(['CLNT_ID','SESS_DT']) # diff를 사용하기 위해 날짜순으로 정렬
+session['DT_DIFF'] = session['SESS_DT'].diff() # (1) 일단은 전체에 대해 차이를 구해준 다음
+session.loc[session.CLNT_ID != session.CLNT_ID.shift(),'DT_DIFF'] = None #(2) CLNT_ID가 변하는 경우에만 None로 수정
+# 새롭게 라벨 제작
+Y = session['DT_DIFF'].dt.days.tolist() # date 형태를 int 형태로 변형
+a = list()
+a.append(np.nan)
+Y = Y[1:]+a # 한칸씩 올리고 마지막에 np.nan 추가 
+session['y']=Y # 라벨 추가
+session = session[pd.notnull(session['y])] # 라벨값이 np.nan인경우
+del raw['DT_DIFF'] # it was just once used to make response variable.
+    </code>
+  </pre>
+</details>
 4. NA 처리
 - 고객의 성별과 나이는 회원가입을 하지 않은 경우, 생기기  새로운 범주를 만들어서 더미변수화
 - search 데이터의 nan는 검색을 하지 않고 구매를 한 경우, 0으로 변경
