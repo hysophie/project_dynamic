@@ -22,7 +22,7 @@
 
 #### 사용 데이터 소개
 1. 수집기간 및 수집량
-- Session,,Product,Search1,Search2,Mater,Custom 총 6개의 data set
+- Session,,Product,Search1,Search2,Master,Custom 총 6개의 data set
 - 수집기간: 총 6개월(‘18년 4월 ~ 9월)
 - 용량: 1.07GB
 
