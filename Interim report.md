@@ -292,9 +292,9 @@ hotday.sort_index(inplace=True,ascending=True)
 </details>
 
 4. y labeling
-1. 날짜간의 차이를 구하고
-2. CLNT_ID가 변하는 경우에만 none으로 수정
-3. y를 한칸씩 값을 올려서 학습될 y값과 x들의 row를 동일하게 맞춤. 
+- 날짜간의 차이를 구하고
+- CLNT_ID가 변하는 경우에만 none으로 수정
+- y를 한칸씩 값을 올려서 학습될 y값과 x들의 row를 동일하게 맞춤. 
 <details>
   <summary>Click to show code!</summary>
   <pre>
