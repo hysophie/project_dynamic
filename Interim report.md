@@ -28,7 +28,7 @@
 
 2. 용어및 변수 설명 
 - Main Key: CLNT_ID, SESS_ID
-- client, Session, hit
+- Client, Session, Hit의 정의.
 - 상세 설명,'변수설명.docx' 첨부파일 
 
 #### 전처리 과정
