@@ -15,7 +15,7 @@
 3. 예측 지표 Y 설정 과정
 - 사용 데이터가 실시간이 아님, 실시간 측면 보다 개인맞춤화에 초점을 맞춤. 
 - 구매를 한 경우에만 데이터가 있음.
-  - 구매확률 -> 7일 이내 재구매확률 -> 재구매기간
+  - 구매확률 -> 6일 이내 재구매확률 or 재구매기간
 
 4. 분석대상 
 - 주 소비층인 20-40대(94%)를 기준으로  
@@ -38,13 +38,99 @@
   - 각 기념일 전 시점에서 구매량이 증가는 패턴을 고려
   - ex) 어린이날은 5일전에 가장 많은 구매 패턴이 나타남. 어린이날 5일전 변수를 추가. 
 -  SESS_DT를 str-> datetime으로 변경,월,요일,주 등 변수를 추가. 
+<details>
+  <summary>Click to show code!</summary>
 
-<pre>
-  <code>
-    print()
-  </code>
-</pre>
+  <pre>
+    <code>
+# SESS_DT을 datetime 자료형으로 변환.
+session['SESS_DT'] = pd.to_datetime(session['SESS_DT'], format = '%Y%m%d')
+## 월,주,일 변수 생성. 19 -> 1월 1일 이후 19번째 주 double check  0 = 월요일, 6 = 일요일  double check
+session['MONTH'] = list(map(lambda x:x.month,session['SESS_DT'])) 
+session['WEEK'] = list(map(lambda x:x.week,session['SESS_DT'])) 
+session['DAY'] = list(map(lambda x:x.weekday(),session['SESS_DT'])) 
 
+## 휴일 변수; EDA후 유의미하게 구매패턴이 차이나는 'hot day'를 추가
+
+session['Timestamp'] = 0
+session['SESS_DT'] = session['SESS_DT'].astype('str')
+session['SESS_DT'] = list(map(lambda x:datetime.strptime(x,'%Y%m%d'), session['SESS_DT']))
+session['Timestamp'] = list(map(lambda x:datetime.timestamp(x), session['SESS_DT']))
+
+Sat = pd.date_range(min(session.SESS_DT), max(session.SESS_DT), freq='W-SAT') #Saturday
+Sun = pd.date_range(min(session.SESS_DT), max(session.SESS_DT), freq='W-SUN') #Sunday
+
+Sat_Timestamp=list(map(lambda x:datetime.timestamp(x), Sat))
+Sun_Timestamp=list(map(lambda x:datetime.timestamp(x), Sun))
+
+Holiday = np.array(['20180505', '20180522', '20180606', '20180815', '20180923', '20180924', '20180925', ])
+repic_Holiday = np.array(['20180507', '20180613', '20180926']) #5월7일, 9월26일: 대체 공휴일,6월 13일: 지방선거일
+Holiday = np.append(Holiday, repic_Holiday)
+Holiday = list(map(lambda x:datetime.strptime(x,'%Y%m%d'), Holiday))
+
+Holiday_Timestamp=list(map(lambda x:datetime.timestamp(x), Holiday))
+
+All_Timestamp = Sat_Timestamp + Sun_Timestamp + Holiday_Timestamp
+
+session.ix[session['Timestamp'].isin(All_Timestamp),'Rest']=1
+
+session['Rest'] = 0 #휴일인 날
+
+weekend_Timestamp = Sat_Timestamp
+weekend_Timestamp = list(map(lambda x:datetime.fromtimestamp(x), weekend_Timestamp))
+
+session['five_before'] = 0
+session.ix[session['SESS_DT'].isin(list(map(lambda x: x+timedelta(days=-5), weekend_Timestamp))), 'five_before'] = 1
+
+# 어린이날 추가
+children_day = np.array(['2018-05-05'])
+children_day = list(map(lambda x:datetime.strptime(x,'%Y-%m-%d'), children_day))
+children_hotdays = []
+
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-3), children_day))[0])
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-4), children_day))[0])
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-5), children_day))[0])
+children_hotdays.append(list(map(lambda x: x+timedelta(days=-6), children_day))[0])
+
+session['children_hotday'] = 0
+session.ix[session['SESS_DT'].isin(children_hotdays),'children_hotday'] = 1
+
+# 스승의 날 추가
+teacher_day = np.array(['2018-05-15'])
+teacher_day = list(map(lambda x:datetime.strptime(x,'%Y-%m-%d'), teacher_day))
+teacher_hotdays = []
+
+teacher_hotdays.append(list(map(lambda x: x+timedelta(days=-1), teacher_day))[0])
+
+session['teacher_hotday'] = 0
+session.ix[session['SESS_DT'].isin(teacher_hotdays), 'teacher_hotday'] = 1
+
+# 선거일 추가
+election_day = np.array(['2018-06-13']) 
+election_day = list(map(lambda x:datetime.strptime(x,'%Y-%m-%d'), election_day))
+
+election_hotdays = []
+
+election_hotdays.append(list(map(lambda x: x+timedelta(days=-2), election_day))[0])
+election_hotdays.append(list(map(lambda x: x+timedelta(days=-3), election_day))[0])
+
+session['election_hotday'] = 0
+session.ix[session['SESS_DT'].isin(election_hotdays), 'election_hotday'] = 1
+
+# Multi Index로 바꾸어 merge 위해 hotday dataframe으로 정리해둠
+hotday=session.set_index(['CLNT_ID', 'SESS_ID'])
+
+del(hotday['DVC_CTG_NM'])
+del(hotday['ZON_NM'])
+del(hotday['CITY_NM'])
+del(hotday['Timestamp'])
+del(hotday['Rest'])
+del(hotday['SESS_DT'])
+
+hotday.sort_index(inplace=True,ascending=True)
+    </code>
+  </pre>
+</details>
 2. Product
 - Main key값에 맞게 데이터 집적
 - 구매 총액, 평균, 분산, 상품갯수 등을 생성.
