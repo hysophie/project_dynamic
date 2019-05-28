@@ -329,7 +329,7 @@ del raw['DT_DIFF'] # it was just once used to make response variable.
 연속형 변수만 사용해서, xgboost로 예측한 결과: 0.63 ㅠㅠ
 > xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05  
 
-1로만 예측 결과: 0.53
-0으로만 예측 결과:0.47
-동전 던지기:0.5 ㅎㅎ..
+1로만 예측 결과: 0.53  
+0으로만 예측 결과:0.47  
+동전 던지기:0.5 ㅎㅎ..  
 
