@@ -333,4 +333,12 @@ del raw['DT_DIFF'] # it was just once used to make response variable.
 1로만 예측 결과: 0.53  
 0으로만 예측 결과:0.47  
 동전 던지기:0.5 ㅎㅎ..  
-
+<details>
+  <summary>python으로 구현한 동전던지기 모델이 궁금하다면 클릭!!</summary>
+  <pre>
+    <code>
+import random
+flips = [random.randint(0,1) for r in range(len(predictions))]
+    </code>
+  </pre>
+</details>
