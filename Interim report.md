@@ -72,6 +72,71 @@ product["TOT_AM"] = product["PD_BUY_AM"] * product["PD_BUY_CT"]
 # CLNT_ID와 SESS_ID가 모두 같은 행들을 "TOT_AM","PD_BUY_CT","PD_BUY_AM"에 대해 합계,평균,표준편차를 구한 것
 product_agg = product.groupby(['CLNT_ID', 'SESS_ID'])[['TOT_AM','PD_BUY_CT','PD_BUY_AM']].agg(['sum','mean','std'])
 product_agg.columns= list(map(lambda x:x[0]+'_'+x[1],list(product_agg)))
+
+## Product Vector mapping
+
+# ## Phase1.
+# #### SESS_ID마다 구매한 상품 쌓아 - 그 대분류 쌓아 - 대분류 구매 패턴 (빈도 / 여부)
+# #### 변수 1 : 세션 내 쇼핑 Category 구매 빈도(단순 횟수)
+# #### 변수 2 : 세션 내 쇼핑 Category 구매 여부(0,1 binary vec)
+
+product = product.sort_values(by=['CLNT_ID', 'SESS_ID'], axis=0)
+master= master.sort_values(by='PD_C',ascending=True)
+raw=product.merge(master,on='PD_C',how='inner')
+
+#사전식으로 대분류 배열 정렬 (ㄱ으로 시작하여 ㅎ으로 끝나도록)
+clac1_list=list(raw['CLAC1_NM'].unique())
+clac1_list.sort()
+CLAC1_NM_dict=dict(zip(clac1_list,range(0,37)))
+
+#대분류 한글 -> 배정된 숫자로 변경
+raw2=raw.replace({"CLAC1_NM": CLAC1_NM_dict})
+temp_series = raw2.groupby(['CLNT_ID', 'SESS_ID'])['CLAC1_NM'].agg(lambda x: list(x))
+temp_df=pd.DataFrame(temp_series)
+
+#변수2 위해 만들어 둔 multiindex를 column으로 돌린 temp2_df
+temp2_df=temp_df.reset_index()
+
+# ## Phase2. 
+# #### SESS_ID로 정렬된 Dataframe을 역행하여 {(CLNT_ID,SESS_ID): 36개의 대분류 구매 빈도 vector}의 Dictionary 생성. 
+# #### Vector 형태로 Key를 만든 이유는? Multiindex인 Dataframe.index.values하면 tuple형태로 나와서 mapping 편리하게 하기 위함임
+
+# 이런 식으로 empty vector 제작
+vec_frame=np.zeros((1,37))
+
+# #### 변수 1 - 10-15분 소요
+
+# 변수 1 단순 빈도 Vector
+n=len(temp_df)-1
+prod_count_dict={}
+
+while True:
+    vec_frame=np.zeros((1,37))
+    if n !=-1:
+        for i in temp_df.CLAC1_NM[n]:
+            vec_frame[0][i]+=1
+        prod_count_dict[temp_df.index.values[n]]=vec_frame
+        n=n-1
+    elif n ==-1:
+        print("Done")
+        break
+
+# #### 변수 2 - 10-15분 소요
+# 변수 2 0,1의 Binary Vector
+n=len(temp_df)-1
+prod_bin_dict={}
+
+while True:
+    vec_frame=np.zeros((1,37))
+    if n !=-1:
+        for i in set(temp2_df.CLAC1_NM[n]):
+            vec_frame[0][i]+=1
+        prod_bin_dict[temp_df.index.values[n]]=vec_frame
+        n=n-1
+    elif n ==-1:
+        print("Done")
+        break
+
     </code>
   </pre>
 </details>
