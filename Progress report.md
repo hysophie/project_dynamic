@@ -29,7 +29,7 @@
 
 2. 용어및 변수 설명 
 - Main Key: CLNT_ID, SESS_ID
-- Client, Session, Hit의 정의 .
+- 핵심 의 정의 .
 - Client:  
 > cookie를 기반으로 발급, 동일한 사람이라도 접속매체에 따라 복수의 값을 가질 수 있음.  
 > 데이터 상에서 고유한 식별 불가능  
