@@ -164,7 +164,7 @@ a = list()
 a.append(np.nan)
 Y = Y[1:]+a # 한칸씩 올리고 마지막에 np.nan 추가 
 session['y']=Y # 라벨 추가
-session = session[pd.notnull(session['y])] # 라벨값이 np.nan인경우
+session = session[pd.notnull(session['y'])] # 라벨값이 np.nan인경우
 del raw['DT_DIFF'] # it was just once used to make response variable.
 
 #%% (5) Merge datasets
