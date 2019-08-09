@@ -1,0 +1,405 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
+# settings
+
+import pandas as pd
+import os
+import matplotlib.pyplot as plt
+import re
+import numpy as np
+from datetime import datetime
+from sklearn.model_selection import train_test_split
+import time
+import pickle
+from tqdm import tqdm
+
+
+# In[ ]:
+
+
+os.chdir(r"C:\Users\BokyungChoi\Desktop\GrowthHackers\project_dynamic\dataset\raw")
+
+
+# In[ ]:
+
+
+# dataset loading
+with open('raw.pickle','rb') as raw:
+    raw_final1=pickle.load(raw)
+
+
+# In[ ]:
+
+
+# dataset loading
+with open('raw4.pickle','rb') as raw4:
+    raw4=pickle.load(raw4)
+
+
+# In[ ]:
+
+
+# dataset loading
+with open('raw_final3.pickle','rb') as raw:
+    raw=pickle.load(raw)
+
+
+# In[ ]:
+
+
+# dataset loading
+with open('product_dummy.pickle','rb') as raw:
+    product_dummy=pickle.load(raw)
+
+
+# In[ ]:
+
+
+raw.head()
+
+
+# In[ ]:
+
+
+raw.loc[raw.loc[:,"KWD_CNT"].isna()==True,'KWD_CNT'] = 0
+
+
+# In[ ]:
+
+
+raw.head()
+
+
+# ### Cross Validation + RF 
+
+# In[ ]:
+
+
+raw.rename(columns={'Y':'y'}, 
+                 inplace=True)
+
+
+# In[ ]:
+
+
+temp_list.remove('y')
+temp_list.append('y')
+
+
+# In[ ]:
+
+
+cols=['TOT_SESS_HR_V_x','TOT_SESS_HR_V_y',]
+for col in cols:
+    raw[col] = raw[col].astype(str)
+    raw[col] = list(map(lambda x:x.replace(",",""),raw[col]))
+    raw[col] = raw[col].astype(int)
+
+
+# ### making dummies for WEEK
+
+# In[ ]:
+
+
+temp_df=pd.get_dummies(raw['WEEK'])
+
+
+# In[ ]:
+
+
+temp_df.head()
+
+
+# In[ ]:
+
+
+raw2=pd.merge(raw, temp_df, left_index=True, right_index=True)
+
+
+# In[ ]:
+
+
+temp=raw2['y']
+del raw2['y']
+
+
+# In[ ]:
+
+
+raw2=pd.merge(raw2,temp,left_index=True,right_index=True)
+
+
+# In[ ]:
+
+
+raw2.head()
+
+
+# ### normalization with dividng x and y
+
+# In[ ]:
+
+
+raw4.head()
+
+
+# In[ ]:
+
+
+raw4.columns
+
+
+# In[ ]:
+
+
+# #데이터 정규화
+from sklearn import preprocessing
+scaler = preprocessing.StandardScaler()
+x_df=raw4[['SESS_SEQ', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V', 
+       'DT_DIFF', 'TOT_AM_sum', 'TOT_AM_mean', 'PD_BUY_CT_sum',
+       'PD_BUY_CT_mean', 'PD_BUY_AM_sum', 'PD_BUY_AM_mean', 'SEARCH_CNT',
+       'SEARCH_TOT', 'KWD_CNT', 'SEARCH_RATIO', 'SESS_SEQ_DIFF', 'BUY_CNT',
+       'DT_DIFF_MEAN']]
+scaler.fit(x_df)
+scaled_ar = scaler.transform(x_df)
+scaled_df=pd.DataFrame(scaled_ar,index=raw4.index,columns=x_df.columns)
+
+
+# In[ ]:
+
+
+scaled_df.head()
+
+
+# In[ ]:
+
+
+y_df=raw4.drop(columns=['SESS_SEQ', 'TOT_PAG_VIEW_CT', 'TOT_SESS_HR_V', 
+       'DT_DIFF', 'TOT_AM_sum', 'TOT_AM_mean', 'PD_BUY_CT_sum',
+       'PD_BUY_CT_mean', 'PD_BUY_AM_sum', 'PD_BUY_AM_mean', 'SEARCH_CNT',
+       'SEARCH_TOT', 'KWD_CNT', 'SEARCH_RATIO', 'SESS_SEQ_DIFF', 'BUY_CNT',
+       'DT_DIFF_MEAN'])
+
+
+# In[ ]:
+
+
+raw_final=scaled_df.join(y_df)
+
+
+# In[ ]:
+
+
+raw_final.shape #완성하였다.
+
+
+# In[ ]:
+
+
+raw_final.head(15)
+
+
+# In[ ]:
+
+
+#0 또는 1로 변환하기
+raw_final['y']=raw_final['y'].apply(lambda x: 1 if x >= 7 else 0)
+
+
+# In[ ]:
+
+
+X=raw_final.iloc[:,:-1]
+y=raw_final.iloc[:,-1:]
+
+
+# In[ ]:
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test=train_test_split(X,y,test_size=0.3,random_state=2)
+
+print(X_train.shape)
+print(y_train.shape)
+print(X_test.shape)
+print(y_test.shape)
+
+
+# ### Random Forest
+
+# In[ ]:
+
+
+from sklearn.ensemble import RandomForestClassifier
+rf = RandomForestClassifier(n_estimators=, random_state=0)
+rf.fit(X_train, y_train)
+
+
+# In[ ]:
+
+
+rf.score(X_train,y_train)
+
+print("Train R^2: ",rf.score(X_train,y_train))
+print("Test R^2: ",rf.score(X_test,y_test))
+
+
+# In[ ]:
+
+
+from sklearn.metrics import accuracy_score
+predicted = rf.predict(X_test)
+accuracy_score(y_test, predicted)
+
+
+# In[ ]:
+
+
+f_names = np.array(X.columns)
+print(f_names)
+f_importances = rf.feature_importances_
+for name, importance in zip(f_names, f_importances):
+    print(name, importance)
+s_importances = pd.Series(f_importances, index=f_names)
+s_importances.sort_values(ascending=False)
+
+
+# In[ ]:
+
+
+f_df = pd.DataFrame(s_importances)
+f_df.to_excel("f_df.xls", index=True)
+
+
+# ### 변수선택법 적용
+
+# In[ ]:
+
+
+from sklearn.feature_selection import SelectPercentile
+from sklearn.feature_selection import f_classif
+from sklearn.feature_selection import mutual_info_classif
+from sklearn.feature_selection import chi2
+
+select=SelectPercentile(percentile=60,score_func=f_classif)
+select.fit(X_train,y_train)
+
+# #선택된 변수 확인
+# may1_df=mays_df[['N_weekday_mean', 'N_fri_temp', 'N_fri_rain', 'N_fri_미세',
+#        'N_fri_초미세', 'N_foodindustry', 'N_population_density', 'N_buss_density',
+#        'N_univ_num', 'N_trend_thu', 'N_trend_fri']]
+X_train.columns[np.where(select.get_support()==True)]
+
+#transform을 이용해 선택된 변수만 선택
+X_train_selected=select.transform(X_train)
+X_train_selected.shape
+X_test_selected=select.transform(X_test)
+X_test_selected.shape
+
+
+# In[ ]:
+
+
+from sklearn.ensemble import RandomForestClassifier
+rf2 = RandomForestClassifier(n_estimators=200, min_samples_leaf=3, random_state=42)
+rf2.fit(X_train, y_train)
+
+
+# In[ ]:
+
+
+# 12:02
+rf2.score(X_train,y_train)
+
+print("Train R^2: ",rf2.score(X_train,y_train))
+print("Test R^2: ",rf2.score(X_test,y_test))
+
+
+# In[ ]:
+
+
+from sklearn.metrics import auc
+from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import precision_recall_curve
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
+
+# In[ ]:
+
+
+#keep probabilities for the positive outcome only
+probs = rf2.predict_proba(X_test)
+y_score = probs[:, 1] # 0,1 중 1로 분류될 확률
+
+
+# In[ ]:
+
+
+# calculate AUC
+roc_auc = roc_auc_score(y_test, y_score)
+
+# calculate roc curve
+fpr, tpr, thresholds = roc_curve(y_test, y_score)
+
+
+# In[ ]:
+
+
+plt.figure()
+plt.plot(fpr, tpr, lw=2, color='darkorange', label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate = Recall')
+plt.ylabel('True Positive Rate = Sensitivity')
+plt.title('ROC curve')
+plt.legend(loc="lower right")
+plt.show()
+
+
+# In[ ]:
+
+
+ax= plt.subplot()
+labels = ['<= 6 days', '> 6 days']
+cm = confusion_matrix(y_test, pred, labels)
+
+
+sns.heatmap(cm, annot=True, ax = ax); #annot=True to annotate cells
+
+# labels, title and ticks
+ax.set_xlabel('Predicted labels');ax.set_ylabel('True labels'); 
+ax.set_title('Confusion Matrix'); 
+ax.xaxis.set_ticklabels(['<= 6 days', '> 6 days']); ax.yaxis.set_ticklabels(['<= 6 days', '> 6 days']);
+
+
+# In[ ]:
+
+
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import classification_report, confusion_matrix
+
+
+rf2_predict=rf2.predict(X_test)
+# rf2_cv_score = cross_val_score(rf2, X, y, cv=10, 
+#                                scoring='roc_auc')
+
+
+print("=== Confusion Matrix ===")
+print(confusion_matrix(y_test, rf2_predict))
+print('\n')
+print("=== Classification Report ===")
+print(classification_report(y_test, rf2_predict))
+print('\n')
+print("=== All AUC Scores ===")
+print(rf2_cv_score)
+print('\n')
+print("=== Mean AUC Score ===")
+print("Mean AUC Score - Random Forest: ", rf2_cv_score.mean())
+
