@@ -1,6 +1,13 @@
 ##### Meeting log & Timeline
 ---
 
+### Member
+Demian: 오동건
+Robin: 류승우
+Sophie: 이현아
+Jongchan: 김종찬
+Bonnie: 최보경
+
 ### 프로젝트 주제 및 데이터 선정. 
 #### Overview
 - 일시: 4/30 20:00~21:00  
